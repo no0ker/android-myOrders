@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\apps\yandexmapkit-sample\yandexmapkitsample\build\intermediates\exploded-aar\yandexmapkit-sample\yandexmapkitlibrary\unspecified\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="f48aaaded52cf99e846f2f272973050dc1e67df0">
+        <dex dex="C:\apps\yandexmapkit-sample\yandexmapkitsample\build\intermediates\pre-dexed\debug\classes-7f085a095664feaac78919c9f6bab6f3b1ae4f1e.jar" />
+    </item>
+    <item
+        jar="C:\apps\yandexmapkit-sample\yandexmapkitsample\build\intermediates\exploded-aar\yandexmapkit-sample\yandexmapkitlibrary\unspecified\jars\libs\classes.jar"
+        jumboMode="false"
+        revision="23.0.0 rc2"
+        sha1="fafc78681412f85865274d9163d1eab0ef61866d">
+        <dex dex="C:\apps\yandexmapkit-sample\yandexmapkitsample\build\intermediates\pre-dexed\debug\classes-42ac6ca6da9cb7b66a133e247a8127e12de3641d.jar" />
+    </item>
+
+</items>
