@@ -7,4 +7,4 @@
     <TextView android:id="@+id/info" android:layout_width="fill_parent"
                   android:layout_height="wrap_content"/>
 </LinearLayout>
-<!-- From: file:/C:/apps/my/yandexmapkitsample/src/main/res/layout/info.xml -->
+<!-- From: file:/C:/apps/android-myOrders/yandexmapkitsample/src/main/res/layout/info.xml -->

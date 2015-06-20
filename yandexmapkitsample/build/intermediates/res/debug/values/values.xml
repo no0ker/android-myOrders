@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/apps/my/yandexmapkitsample/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/apps/android-myOrders/yandexmapkitsample/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">YMK Sample</string>
     <string name="app_name_head">Yandex Map Kit</string>
@@ -42,7 +42,7 @@
     <string name="sample9">Карта в ScrollView/Добавление карты в ScrollView</string>
     <string name="sample9_head">Карта в ScrollView</string>
     <string name="yandex">Яндекс</string>
-    <!-- From: file:/C:/apps/my/yandexmapkitsample/build/intermediates/exploded-aar/my/yandexmapkitlibrary/unspecified/res/values/values.xml -->
+    <!-- From: file:/C:/apps/android-myOrders/yandexmapkitsample/build/intermediates/exploded-aar/android-myOrders/yandexmapkitlibrary/unspecified/res/values/values.xml -->
     <eat-comment/>
     <string name="ymk_findme_not_found">Не удалось определить местоположение</string>
     <string name="ymk_kilometers_short">км</string>
