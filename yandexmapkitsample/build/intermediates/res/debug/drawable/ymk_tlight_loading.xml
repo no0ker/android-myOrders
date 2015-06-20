@@ -9,4 +9,4 @@
         android:drawable="@drawable/ymk_tlight_no_level_loading_2"
         android:maxLevel="1"
          />
-</level-list><!-- From: file:/C:/apps/yandexmapkit-sample/yandexmapkitlibrary/src/main/res/drawable/ymk_tlight_loading.xml --><!-- From: file:/C:/apps/yandexmapkit-sample/yandexmapkitsample/build/intermediates/exploded-aar/yandexmapkit-sample/yandexmapkitlibrary/unspecified/res/drawable/ymk_tlight_loading.xml -->
+</level-list><!-- From: file:/C:/apps/my/yandexmapkitlibrary/src/main/res/drawable/ymk_tlight_loading.xml --><!-- From: file:/C:/apps/my/yandexmapkitsample/build/intermediates/exploded-aar/my/yandexmapkitlibrary/unspecified/res/drawable/ymk_tlight_loading.xml -->
