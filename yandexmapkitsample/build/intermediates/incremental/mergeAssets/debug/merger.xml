@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="unspecified"><source path="C:\apps\android-myOrders\yandexmapkitsample\build\intermediates\exploded-aar\android-myOrders\yandexmapkitlibrary\unspecified\assets"/></dataSet><dataSet config="main"><source path="C:\apps\android-myOrders\yandexmapkitsample\src\main\assets"/></dataSet><dataSet config="debug"><source path="C:\apps\android-myOrders\yandexmapkitsample\src\debug\assets"/></dataSet></merger>
