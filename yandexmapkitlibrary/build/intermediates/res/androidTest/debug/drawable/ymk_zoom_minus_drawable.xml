@@ -4,4 +4,4 @@
         android:drawable="@drawable/ymk_zoom_minus_pressed" />
     <item android:state_enabled="true"
         android:drawable="@drawable/ymk_zoom_minus" />
-</selector><!-- From: file:/C:/apps/android-myOrders/yandexmapkitlibrary/src/main/res/drawable/ymk_zoom_minus_drawable.xml --><!-- From: file:/C:/apps/android-myOrders/yandexmapkitlibrary/build/intermediates/bundles/debug/res/drawable/ymk_zoom_minus_drawable.xml -->
+</selector><!-- From: file:/C:/Users/rush0714/Desktop/My%20Stream/android-myOrders/trunk/yandexmapkitlibrary/src/main/res/drawable/ymk_zoom_minus_drawable.xml --><!-- From: file:/C:/Users/rush0714/Desktop/My%20Stream/android-myOrders/trunk/yandexmapkitlibrary/build/intermediates/bundles/debug/res/drawable/ymk_zoom_minus_drawable.xml -->

@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="C:\apps\android-myOrders\yandexmapkitlibrary\src\main\assets"/></dataSet><dataSet config="debug"><source path="C:\apps\android-myOrders\yandexmapkitlibrary\src\debug\assets"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="C:\Users\rush0714\Desktop\My Stream\android-myOrders\trunk\yandexmapkitlibrary\src\main\assets"/></dataSet><dataSet config="debug"><source path="C:\Users\rush0714\Desktop\My Stream\android-myOrders\trunk\yandexmapkitlibrary\src\debug\assets"/></dataSet></merger>
