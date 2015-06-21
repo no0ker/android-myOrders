@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import NetUtils.DataSite.DataSiteHelperV2;
+import NetUtils.Maps.GeoCoderHelper;
 import NetUtils.Orders.Order;
 
 public class ReciveOrdersOnClickListener implements View.OnClickListener {
@@ -68,7 +69,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
                     final ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.expandableListView);
                     expandableListView.setAdapter(adapter);
 
-                    for (Order iOrder : DataStorage.getOrders()) {
+                    for (final Order iOrder : DataStorage.getOrders()) {
                         new AsyncTask<Order, Void, Void>() {
                             @Override
                             protected Void doInBackground(Order... order) {
@@ -80,6 +81,15 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
                                 return null;
                             }
                         }.execute(iOrder);
+
+                        new AsyncTask<Order, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Order... orders) {
+                                iOrder.setGeoPoint(GeoCoderHelper.getGeoPoint(iOrder.getAddress()));
+                                return null;
+                            }
+                        }.execute(iOrder);
+
                     }
                 }
                 if (message != null) {

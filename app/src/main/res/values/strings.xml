@@ -7,12 +7,14 @@
     <string name="no_auth_data">Введите логин и пароль в настройках!</string>
     <string name="invalid_auth_data">Неверные логин и пароль!</string>
     <string name="no_orders">Заявки на сегодня нет</string>
-    <string name="orders_done">Заявки на сегодня нет</string>
+    <string name="orders_done">Заявки обновлены</string>
     <string name="title_activity_map">MapActivity</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="get_orders">Получить заявки</string>
     <string name="get_map">Карта заявок</string>
+    <string name="koord_later">Координаты заявок пока обновляются. Повторите чуть позже.</string>
+
 
 </resources>

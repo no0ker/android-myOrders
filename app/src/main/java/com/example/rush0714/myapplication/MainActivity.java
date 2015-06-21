@@ -9,8 +9,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import NetUtils.Listeners.ReciveOrdersOnClickListener;
+import NetUtils.Orders.Order;
 
 public class MainActivity extends Activity {
     private final String TAG = "MainActivity";
@@ -31,6 +33,12 @@ public class MainActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                    for(Order iOrder : DataStorage.getOrders()){
+                        if(iOrder.getGeoPoint() == null){
+                            Toast.makeText(getApplicationContext(), getString(R.string.koord_later), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                     startActivity(intent);
                 }
             }

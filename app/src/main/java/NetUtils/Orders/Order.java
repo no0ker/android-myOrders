@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import NetUtils.Maps.GeoPoint;
+
 public class Order implements Comparable<Order>, Serializable {
     private Date time;
     private String address;
@@ -12,6 +14,7 @@ public class Order implements Comparable<Order>, Serializable {
     private String comment;
     private String link;
     private String color;
+    private GeoPoint geoPoint;
 
     private Boolean isBenefit = false; // !
     private List<Comment> comments;
@@ -95,4 +98,11 @@ public class Order implements Comparable<Order>, Serializable {
         this.comments = comments;
     }
 
+    public GeoPoint getGeoPoint() {
+        return geoPoint;
+    }
+
+    public void setGeoPoint(GeoPoint geoPoint) {
+        this.geoPoint = geoPoint;
+    }
 }
