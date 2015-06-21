@@ -39,7 +39,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
         String login = (String) preferences.get(parentActivity.getString(R.string.login_key));
         String pass = (String) preferences.get(parentActivity.getString(R.string.pass_key));
 
-        if (login.isEmpty() || pass.isEmpty()) {
+        if (login == null || pass == null) {
             Toast.makeText(parentActivity.getApplicationContext(), R.string.no_auth_data, Toast.LENGTH_SHORT).show();
         }
 

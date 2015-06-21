@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/android-myOrders.iml" filepath="$PROJECT_DIR$/android-myOrders.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/myOrders.iml" filepath="$PROJECT_DIR$/myOrders.iml" />
       <module fileurl="file://$PROJECT_DIR$/yandexmapkitlibrary/yandexmapkitlibrary.iml" filepath="$PROJECT_DIR$/yandexmapkitlibrary/yandexmapkitlibrary.iml" />
     </modules>
   </component>
