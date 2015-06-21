@@ -46,7 +46,7 @@ public class MapActivity extends ActionBarActivity {
                 getApplicationContext(),
                 new GeoPoint(geoPoint.getLng(), geoPoint.getLat())
             );
-            balloonItem.setText(SHORT_TIME_FORMAT.format(iOrder.getTime()));
+            balloonItem.setText(SHORT_TIME_FORMAT.format(iOrder.getTime()) + "  " + iOrder.getAddress());
             overlayItem.setBalloonItem(balloonItem);
             overlay.addOverlayItem(overlayItem);
         }
