@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditTextPreference
+        android:key="@string/login_key"
+        android:summary="логин для авторизации на сайте"
+        android:title="Логин">
+    </EditTextPreference>
+
+    <EditTextPreference
+        android:key="@string/pass_key"
+        android:summary="пароль для авторизации на сайте"
+        android:title="Пароль">
+    </EditTextPreference>
+
+</PreferenceScreen>
