@@ -45,6 +45,13 @@ public class OrderHelper {
             );
 
             String clientName = client.ownText();
+
+            Pattern pattern = Pattern.compile("\\d");
+            Matcher matcher = pattern.matcher(clientName);
+            if(matcher.find()){
+                clientName = clientName.substring(0, matcher.start());
+            }
+
             String clientAddress = client.getElementsByTag("a").first().text();
 
             Date time = DATE_FORMAT.parse(element.getElementsByClass("timetable").first().text());

@@ -92,7 +92,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
 
                     }
                 }
-                if (message != null) {
+                if (message == null) {
                     if (DataStorage.getOrders().size() == 0) {
                         message = parentActivity.getString(R.string.no_orders);
                     } else {

@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import java.text.SimpleDateFormat;
+
 import NetUtils.Orders.Order;
 import ru.yandex.yandexmapkit.MapController;
 import ru.yandex.yandexmapkit.MapView;
@@ -15,6 +17,8 @@ import ru.yandex.yandexmapkit.utils.GeoPoint;
 
 
 public class MapActivity extends ActionBarActivity {
+
+    private static SimpleDateFormat SHORT_TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class MapActivity extends ActionBarActivity {
                 getApplicationContext(),
                 new GeoPoint(geoPoint.getLng(), geoPoint.getLat())
             );
-            balloonItem.setText(iOrder.getAddress());
+            balloonItem.setText(SHORT_TIME_FORMAT.format(iOrder.getTime()));
             overlayItem.setBalloonItem(balloonItem);
             overlay.addOverlayItem(overlayItem);
         }

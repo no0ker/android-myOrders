@@ -21,6 +21,13 @@ public class DataStorage {
         DataStorage.cookieStore = cookieStore;
     }
 
+    public static Order getOrder(Integer no){
+        if(orders.size() <= no){
+            return null;
+        }
+        return orders.get(no);
+    }
+
     public static List<Order> getOrders() {
         return orders;
     }

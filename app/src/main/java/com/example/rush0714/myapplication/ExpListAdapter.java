@@ -66,17 +66,21 @@ public class ExpListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        Order currentOrder = orders.get(groupPosition);
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_group, null);
         }
 
+        TextView groupCustomer = (TextView) convertView.findViewById(R.id.groupCustomer);
+        groupCustomer.setText(currentOrder.getName());
+
         TextView groupComment = (TextView) convertView.findViewById(R.id.groupComment);
-        groupComment.setText(orders.get(groupPosition).getComment());
+        groupComment.setText(currentOrder.getComment());
 
         if (isExpanded) {
-            List<Comment> comments = orders.get(groupPosition).getComments();
+            List<Comment> comments = currentOrder.getComments();
             if (!comments.isEmpty() || comments.size() > 0) {
                 groupComment.setVisibility(View.GONE);
             }
@@ -84,21 +88,19 @@ public class ExpListAdapter extends BaseExpandableListAdapter {
             groupComment.setVisibility(View.VISIBLE);
         }
 
-        Order order = orders.get(groupPosition);
         TextView groupText = (TextView) convertView.findViewById(R.id.groupTime);
-        groupText.setText(GROUP_TIME_FORMAT.format(order.getTime()));
-        groupText.setTextColor(Color.parseColor(order.getColor()));
+        groupText.setText(GROUP_TIME_FORMAT.format(currentOrder.getTime()));
+        groupText.setTextColor(Color.parseColor(currentOrder.getColor()));
 
         TextView groupTime = (TextView) convertView.findViewById(R.id.groupText);
-        groupTime.setText(order.getAddress());
-        groupTime.setTextColor(Color.parseColor(order.getColor()));
+        groupTime.setText(currentOrder.getAddress());
+        groupTime.setTextColor(Color.parseColor(currentOrder.getColor()));
 
-        if (order.getIsBenefit()) {
+        if (currentOrder.getIsBenefit()) {
             convertView.findViewById(R.id.isBenefit).setVisibility(View.VISIBLE);
         } else {
             convertView.findViewById(R.id.isBenefit).setVisibility(View.GONE);
         }
-
 
         return convertView;
     }

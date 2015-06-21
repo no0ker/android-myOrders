@@ -40,6 +40,15 @@
             android:textStyle="bold"/>
 
         <TextView
+            android:id="@+id/groupCustomer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textSize="@dimen/abc_text_size_small_material"
+            android:textStyle="bold"/>
+
+
+        <TextView
             android:id="@+id/groupComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
