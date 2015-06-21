@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">myOrders</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="title_activity_order">OrderActivity</string>
+    <string name="login_key">login</string>
+    <string name="pass_key">pass</string>
+    <string name="no_auth_data">Введите логин и пароль в настройках!</string>
+    <string name="invalid_auth_data">Неверные логин и пароль!</string>
+    <string name="no_orders">Заявки на сегодня нет</string>
+    <string name="orders_done">Заявки на сегодня нет</string>
+
+</resources>
