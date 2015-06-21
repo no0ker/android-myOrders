@@ -1,2 +1,0 @@
-include ':yandexmapkitlibrary', ':app'
-include ':yandexmapkitsample'
