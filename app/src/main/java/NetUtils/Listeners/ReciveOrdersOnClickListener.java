@@ -41,6 +41,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
 
         if (login == null || pass == null) {
             Toast.makeText(parentActivity.getApplicationContext(), R.string.no_auth_data, Toast.LENGTH_SHORT).show();
+            return;
         }
 
         DataStorage.setLogin(login);
@@ -81,7 +82,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
                         }.execute(iOrder);
                     }
                 }
-                if (message.isEmpty()) {
+                if (message != null) {
                     if (DataStorage.getOrders().size() == 0) {
                         message = parentActivity.getString(R.string.no_orders);
                     } else {
