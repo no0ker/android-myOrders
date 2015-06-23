@@ -46,7 +46,7 @@ public class CallListAdapter extends BaseAdapter {
         }
         TextView textView = (TextView) cView.findViewById(R.id.phoneNumber);
         textView.setText(phoneNumbers.get(i));
-        textView.setOnClickListener(new View.OnClickListener() {
+        cView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TextView textView = (TextView) view;
