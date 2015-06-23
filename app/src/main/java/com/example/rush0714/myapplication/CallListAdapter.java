@@ -44,12 +44,11 @@ public class CallListAdapter extends BaseAdapter {
         if (cView == null) {
             cView = lInflater.inflate(R.layout.list_call_list_item, viewGroup, false);
         }
-        TextView textView = (TextView) cView.findViewById(R.id.phoneNumber);
+        final TextView textView = (TextView) cView.findViewById(R.id.phoneNumber);
         textView.setText(phoneNumbers.get(i));
         cView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView textView = (TextView) view;
                 String callNumber = (String) textView.getText();
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
