@@ -16,15 +16,17 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 public class GeoCoderHelper {
-    private static final String baseAddress= "http://geocode-maps.yandex.ru/1.x/?geocode=";
-    public static final String TAG = GeoCoderHelper.class.toString();
+    private final String baseAddress = "https://geocode-maps.yandex.ru/1.x/?geocode=";
+    public final String TAG = GeoCoderHelper.class.toString();
 
-    public static GeoPoint getGeoPoint(String address){
+    public GeoPoint getGeoPoint(String address) {
         GeoPoint result = new GeoPoint();
         try {
-            URL url = new URL(baseAddress + URLEncoder.encode(address,"UTF-8"));
+            address = address.replaceAll("\\s", "+");
+            URL url = new URL(baseAddress + URLEncoder.encode(address, "UTF-8"));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+
             if (200 != connection.getResponseCode()) {
                 throw new Exception("ошибка при получении координат");
             }
@@ -36,7 +38,7 @@ public class GeoCoderHelper {
             String parsedRsult = saxp.getValue();
             Pattern pattern = Pattern.compile("(\\d+.\\d+)\\s(\\d+.\\d+)");
             Matcher matchsr = pattern.matcher(parsedRsult);
-            if(matchsr.matches()){
+            if (matchsr.matches()) {
                 result.setLat(Double.parseDouble(matchsr.group(1)));
                 result.setLng(Double.parseDouble(matchsr.group(2)));
             }
@@ -46,12 +48,13 @@ public class GeoCoderHelper {
         return result;
     }
 
-    private static class mySaxparser extends DefaultHandler {
+    private class mySaxparser extends DefaultHandler {
         private boolean thisElement;
         private String value;
+
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if(qName.equals("pos")){
+            if (qName.equals("pos")) {
                 thisElement = true;
             } else {
                 thisElement = false;
@@ -65,7 +68,7 @@ public class GeoCoderHelper {
 
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
-            if (thisElement){
+            if (thisElement) {
                 value = new String(ch, start, length);
             }
         }

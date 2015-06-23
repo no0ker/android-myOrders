@@ -85,7 +85,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
                         new AsyncTask<Order, Void, Void>() {
                             @Override
                             protected Void doInBackground(Order... orders) {
-                                iOrder.setGeoPoint(GeoCoderHelper.getGeoPoint(iOrder.getAddress()));
+                                iOrder.setGeoPoint(new GeoCoderHelper().getGeoPoint(iOrder.getAddress()));
                                 return null;
                             }
                         }.execute(iOrder);
