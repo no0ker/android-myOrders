@@ -8,6 +8,8 @@ import java.util.List;
 import NetUtils.Maps.GeoPoint;
 
 public class Order implements Comparable<Order>, Serializable {
+    public final static String closedColor = "#99cc00";
+
     private Date time;
     private String address;
     private String name;

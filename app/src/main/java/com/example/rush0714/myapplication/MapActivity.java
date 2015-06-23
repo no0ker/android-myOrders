@@ -37,6 +37,9 @@ public class MapActivity extends ActionBarActivity {
         Overlay overlay = new Overlay(mMapController);
 
         for (Order iOrder : DataStorage.getOrders()) {
+            if(Order.closedColor.equals(iOrder.getColor())){
+                continue;
+            }
             Resources res = getResources();
             NetUtils.Maps.GeoPoint geoPoint = iOrder.getGeoPoint();
             OverlayItem overlayItem = new OverlayItem(
