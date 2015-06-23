@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">myOrders</string>
+    <string name="app_name">Сиси Сервис</string>
     <string name="menu_settings">Настройки</string>
     <string name="title_activity_order">OrderActivity</string>
     <string name="login_key">login</string>
