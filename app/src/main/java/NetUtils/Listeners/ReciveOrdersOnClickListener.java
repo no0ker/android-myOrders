@@ -22,31 +22,27 @@ import NetUtils.Maps.GeoCoderHelper;
 import NetUtils.Orders.Order;
 
 public class ReciveOrdersOnClickListener implements View.OnClickListener {
-    private SharedPreferences sharedPreferences;
     public static final String TAG = ReciveOrdersOnClickListener.class.toString();
+    private String login;
+    private String password;
+
     Activity parentActivity;
 
     public ReciveOrdersOnClickListener(Activity parentActivity) {
         this.parentActivity = parentActivity;
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
-        ;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
+        Map<String, ?> preferences = sharedPreferences.getAll();
+        this.login = (String) preferences.get(parentActivity.getString(R.string.login_key));
+        this.password = (String) preferences.get(parentActivity.getString(R.string.pass_key));
     }
 
     @Override
     public void onClick(View view) {
 
-        Map<String, ?> preferences = sharedPreferences.getAll();
-
-        String login = (String) preferences.get(parentActivity.getString(R.string.login_key));
-        String pass = (String) preferences.get(parentActivity.getString(R.string.pass_key));
-
-        if (login == null || pass == null) {
+        if (login == null || password == null) {
             Toast.makeText(parentActivity.getApplicationContext(), R.string.no_auth_data, Toast.LENGTH_SHORT).show();
             return;
         }
-
-        DataStorage.setLogin(login);
-        DataStorage.setPassword(pass);
 
         new AsyncTask<Void, Void, Void>() {
             private String message;
@@ -54,7 +50,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    new DataSiteHelperV2().getOrders();
+                    new DataSiteHelperV2().getOrders(login, password);
                 } catch (Exception e) {
                     message = e.getMessage();
                 }
@@ -74,7 +70,7 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
                             @Override
                             protected Void doInBackground(Order... order) {
                                 try {
-                                    new DataSiteHelperV2().setComments(order[0]);
+                                    new DataSiteHelperV2().setComments(order[0], login, password);
                                 } catch (Exception e) {
                                     Log.d(TAG, Log.getStackTraceString(e));
                                 }

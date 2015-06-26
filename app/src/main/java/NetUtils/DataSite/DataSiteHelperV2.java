@@ -22,7 +22,7 @@ import NetUtils.Resources.Resources;
 
 public class DataSiteHelperV2 {
 
-    public void authorize() throws Exception {
+    public void authorize(String login, String password) throws Exception {
         boolean isExpired = true;
         CookieStore cookieStore = DataStorage.getCookieStore();
         for (HttpCookie httpCookie : cookieStore.getCookies()) {
@@ -38,7 +38,6 @@ public class DataSiteHelperV2 {
             URL url = new URL(Resources.URL_MAIN);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-//            connection.setRequestProperty("User-Agent", Resources.USER_AGENT);
             if (200 != connection.getResponseCode()) {
                 throw new Exception("1. удаленный узел не отвечает");
             }
@@ -48,8 +47,9 @@ public class DataSiteHelperV2 {
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes("login=" + DataStorage.getLogin() +
-                "&password=" + DataStorage.getPassword()+
+
+            wr.writeBytes("login=" + login +
+                "&password=" + password +
                 "&logIn=%D0%92%D0%BE%D0%B9%D1%82%D0%B8");
             wr.flush();
             wr.close();
@@ -62,8 +62,8 @@ public class DataSiteHelperV2 {
         }
     }
 
-    public void getOrders() throws Exception {
-        authorize();
+    public void getOrders(String login, String password) throws Exception {
+        authorize(login, password);
         CookieStore cookieStore = DataStorage.getCookieStore();
         CookieManager cookieManager = new CookieManager(DataStorage.getCookieStore(), CookiePolicy.ACCEPT_ALL);
         CookieHandler.setDefault(cookieManager);
@@ -103,8 +103,8 @@ public class DataSiteHelperV2 {
         OrderHelper.parseOrders(res);
     }
 
-    public void setComments(Order order) throws Exception {
-        authorize();
+    public void setComments(Order order, String login, String password) throws Exception {
+        authorize(login, password);
         CookieStore cookieStore = DataStorage.getCookieStore();
 //        cookieStore.add(new URI("http://csrvr.ru"), new HttpCookie("group", "1"));
 
