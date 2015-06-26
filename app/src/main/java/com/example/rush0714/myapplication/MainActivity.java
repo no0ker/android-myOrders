@@ -8,8 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import NetUtils.Listeners.ReciveOrdersOnClickListener;
 import NetUtils.Orders.Order;
@@ -33,8 +36,8 @@ public class MainActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                    for(Order iOrder : DataStorage.getOrders()){
-                        if(iOrder.getGeoPoint() == null){
+                    for (Order iOrder : DataStorage.getOrders()) {
+                        if (iOrder.getGeoPoint() == null) {
                             Toast.makeText(getApplicationContext(), getString(R.string.koord_later), Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -57,6 +60,12 @@ public class MainActivity extends Activity {
                 return false;
             }
         });
+
+        List<Order> orders = DataStorage.getOrders();
+        if(orders != null){
+            ExpandableListAdapter adapter = new ExpListAdapter(this.getApplicationContext(), orders);
+            expandableListView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -75,4 +84,6 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

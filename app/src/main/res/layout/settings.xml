@@ -11,6 +11,7 @@
     </EditTextPreference>
 
     <EditTextPreference
+        android:inputType="textPassword"
         android:key="@string/pass_key"
         android:summary="пароль для авторизации на сайте"
         android:title="Пароль">
