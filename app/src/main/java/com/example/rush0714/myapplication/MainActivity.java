@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
             new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                   Intent intent = new Intent(MainActivity.this, MapActivity.class);
                     for (Order iOrder : DataStorage.getOrders()) {
                         if (iOrder.getGeoPoint() == null) {
                             Toast.makeText(getApplicationContext(), getString(R.string.koord_later), Toast.LENGTH_SHORT).show();

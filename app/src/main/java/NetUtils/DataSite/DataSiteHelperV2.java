@@ -13,6 +13,7 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,9 +50,9 @@ public class DataSiteHelperV2 {
             DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 
             wr.writeBytes("login=" + login +
-                "&password=" + password +
-                "&logIn=%D0%92%D0%BE%D0%B9%D1%82%D0%B8");
-            wr.flush();
+                    "&password=" + password +
+                    "&logIn=" + URLEncoder.encode("Войти","UTF-8"));
+                wr.flush();
             wr.close();
             int a = connection.getResponseCode();
             if (302 != connection.getResponseCode()) {
