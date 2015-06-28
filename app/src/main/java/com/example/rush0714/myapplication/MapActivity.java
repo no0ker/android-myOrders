@@ -44,7 +44,7 @@ public class MapActivity extends ActionBarActivity {
             NetUtils.Maps.GeoPoint geoPoint = iOrder.getGeoPoint();
             OverlayItem overlayItem = new OverlayItem(
                 new GeoPoint(geoPoint.getLng(), geoPoint.getLat()),
-                res.getDrawable(R.drawable.ic_gps_fixed_black_48dp)
+                res.getDrawable(R.drawable.ic_gps_not_fixed_black_48dp)
             );
             BalloonItem balloonItem = new BalloonItem(
                 getApplicationContext(),
