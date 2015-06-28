@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Сиси Сервис</string>
+
+    <string name="menu_map">Карта</string>
     <string name="menu_settings">Настройки</string>
+    <string name="menu_orders">Обновить заявки</string>
+
     <string name="title_activity_order">OrderActivity</string>
     <string name="login_key">login</string>
     <string name="pass_key">pass</string>

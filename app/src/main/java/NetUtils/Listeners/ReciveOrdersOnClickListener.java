@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -21,7 +20,7 @@ import NetUtils.DataSite.DataSiteHelperV2;
 import NetUtils.Maps.GeoCoderHelper;
 import NetUtils.Orders.Order;
 
-public class ReciveOrdersOnClickListener implements View.OnClickListener {
+public class ReciveOrdersOnClickListener {
     public static final String TAG = ReciveOrdersOnClickListener.class.toString();
     private String login;
     private String password;
@@ -36,8 +35,8 @@ public class ReciveOrdersOnClickListener implements View.OnClickListener {
         this.password = (String) preferences.get(parentActivity.getString(R.string.pass_key));
     }
 
-    @Override
-    public void onClick(View view) {
+
+    public void onClick() {
 
         if (login == null || password == null) {
             Toast.makeText(parentActivity.getApplicationContext(), R.string.no_auth_data, Toast.LENGTH_SHORT).show();

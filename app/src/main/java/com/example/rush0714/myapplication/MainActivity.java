@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -23,29 +22,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        Button btnGetOrders = (Button) findViewById(R.id.buttonReciveOrders);
-        btnGetOrders.setOnClickListener(
-            new ReciveOrdersOnClickListener(this)
-        );
 
-        Button btnGetMap = (Button) findViewById(R.id.buttonMap);
-        btnGetMap.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                   Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                    for (Order iOrder : DataStorage.getOrders()) {
-                        if (iOrder.getGeoPoint() == null) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.koord_later), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-                    startActivity(intent);
-                }
-            }
-        );
 
         final ExpandableListView expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         expandableListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -77,11 +55,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.settings) {
+        if (id == R.id.menu_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
+        } else if (id == R.id.menu_orders) {
+            new ReciveOrdersOnClickListener(this).onClick();
+        } else if (id == R.id.menu_map){
+            Intent intent = new Intent(MainActivity.this, MapActivity.class);
+            boolean ready = true;
+            for (Order iOrder : DataStorage.getOrders()) {
+                if (iOrder.getGeoPoint() == null) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.koord_later), Toast.LENGTH_SHORT).show();
+                    ready = false;
+                }
+            }
+            if(ready){
+                startActivity(intent);
+            }
         }
+
         return super.onOptionsItemSelected(item);
     }
 
