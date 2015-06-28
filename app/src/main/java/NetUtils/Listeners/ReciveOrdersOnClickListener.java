@@ -35,7 +35,6 @@ public class ReciveOrdersOnClickListener {
         this.password = (String) preferences.get(parentActivity.getString(R.string.pass_key));
     }
 
-
     public void onClick() {
 
         if (login == null || password == null) {
@@ -64,28 +63,22 @@ public class ReciveOrdersOnClickListener {
                     final ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.expandableListView);
                     expandableListView.setAdapter(adapter);
 
-                    for (final Order iOrder : DataStorage.getOrders()) {
-                        new AsyncTask<Order, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Order... order) {
-                                try {
-                                    new DataSiteHelperV2().setComments(order[0], login, password);
-                                } catch (Exception e) {
-                                    Log.d(TAG, Log.getStackTraceString(e));
+
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            try {
+                                for (final Order iOrder : DataStorage.getOrders()) {
+                                    new DataSiteHelperV2().setComments(iOrder, login, password);
+                                    iOrder.setGeoPoint(new GeoCoderHelper().getGeoPoint(iOrder.getAddress()));
                                 }
-                                return null;
+                            } catch (Exception e) {
+                                Log.d(TAG, Log.getStackTraceString(e));
                             }
-                        }.execute(iOrder);
+                            return null;
+                        }
+                    }.execute();
 
-                        new AsyncTask<Order, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Order... orders) {
-                                iOrder.setGeoPoint(new GeoCoderHelper().getGeoPoint(iOrder.getAddress()));
-                                return null;
-                            }
-                        }.execute(iOrder);
-
-                    }
                 }
                 if (message == null) {
                     if (DataStorage.getOrders().size() == 0) {

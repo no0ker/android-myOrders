@@ -64,6 +64,7 @@ public class MapActivity extends AppCompatActivity {
         minLat = minLon = Double.MAX_VALUE;
         for (int i = 0; i < overlay.getOverlayItems().size(); i++){
             GeoPoint geoPoint = list.get(i).getGeoPoint();
+
             double lat = geoPoint.getLat();
             double lon = geoPoint.getLon();
 

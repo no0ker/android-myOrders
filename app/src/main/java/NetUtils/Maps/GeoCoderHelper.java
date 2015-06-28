@@ -28,7 +28,7 @@ public class GeoCoderHelper {
             connection.setRequestMethod("GET");
 
             if (200 != connection.getResponseCode()) {
-                throw new Exception("ошибка при получении координат");
+                throw new Exception("ошибка при получении координат. код ошибки" + connection.getResponseCode());
             }
 
             SAXParserFactory factory = SAXParserFactory.newInstance();
