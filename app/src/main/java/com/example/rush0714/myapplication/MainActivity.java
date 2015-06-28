@@ -1,8 +1,8 @@
 package com.example.rush0714.myapplication;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +17,7 @@ import java.util.List;
 import NetUtils.Listeners.ReciveOrdersOnClickListener;
 import NetUtils.Orders.Order;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
 
     @Override

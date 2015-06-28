@@ -2,7 +2,7 @@ package com.example.rush0714.myapplication;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -17,7 +17,7 @@ import ru.yandex.yandexmapkit.overlay.balloon.BalloonItem;
 import ru.yandex.yandexmapkit.utils.GeoPoint;
 
 
-public class MapActivity extends ActionBarActivity {
+public class MapActivity extends AppCompatActivity {
 
     private static SimpleDateFormat SHORT_TIME_FORMAT = new SimpleDateFormat("HH:mm");
 
@@ -36,7 +36,9 @@ public class MapActivity extends ActionBarActivity {
 
         Overlay overlay = new Overlay(mMapController);
 
-        for (Order iOrder : DataStorage.getOrders()) {
+        List<Order> orders = DataStorage.getOrders();
+
+        for (Order iOrder : orders) {
             if(Order.closedColor.equals(iOrder.getColor())){
                 continue;
             }
