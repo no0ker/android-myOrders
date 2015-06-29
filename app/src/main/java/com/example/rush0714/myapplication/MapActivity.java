@@ -39,7 +39,7 @@ public class MapActivity extends AppCompatActivity {
         List<Order> orders = DataStorage.getOrders();
 
         for (Order iOrder : orders) {
-            if(Order.closedColor.equals(iOrder.getColor())){
+            if(!Order.openOrder.equals(iOrder.getColor())){
                 continue;
             }
             Resources res = getResources();
