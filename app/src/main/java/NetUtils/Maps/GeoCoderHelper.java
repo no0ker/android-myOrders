@@ -49,12 +49,13 @@ public class GeoCoderHelper {
     }
 
     private class mySaxparser extends DefaultHandler {
+        private boolean found = false;
         private boolean thisElement;
         private String value;
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if (qName.equals("pos")) {
+            if (qName.equals("pos") && !found) {
                 thisElement = true;
             } else {
                 thisElement = false;
@@ -70,6 +71,7 @@ public class GeoCoderHelper {
         public void characters(char[] ch, int start, int length) throws SAXException {
             if (thisElement) {
                 value = new String(ch, start, length);
+                found = true;
             }
         }
 
