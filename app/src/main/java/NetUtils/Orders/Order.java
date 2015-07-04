@@ -9,8 +9,8 @@ import NetUtils.Maps.GeoPoint;
 
 public class Order implements Comparable<Order>, Serializable {
     public final static String openOrder = "#ff9b00";
-    public final static String closeOrder = "#ff9b00";
-    public final static String doneOrder = "#ff9b00";
+    public final static String closeOrder = "#4876FF";
+    public final static String doneOrder = "#99cc00";
 
 
     private Date time;

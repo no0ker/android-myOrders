@@ -39,22 +39,36 @@ public class MapActivity extends AppCompatActivity {
         List<Order> orders = DataStorage.getOrders();
 
         for (Order iOrder : orders) {
-            if(!Order.openOrder.equals(iOrder.getColor())){
-                continue;
-            }
             Resources res = getResources();
             NetUtils.Maps.GeoPoint geoPoint = iOrder.getGeoPoint();
-            OverlayItem overlayItem = new OverlayItem(
-                new GeoPoint(geoPoint.getLng(), geoPoint.getLat()),
-                res.getDrawable(R.drawable.ic_gps_not_fixed_black_48dp)
-            );
+
+            OverlayItem overlayItem = null;
+            if (Order.openOrder.equals(iOrder.getColor())) {
+                overlayItem = new OverlayItem(
+                    new GeoPoint(geoPoint.getLng(), geoPoint.getLat()),
+                    res.getDrawable(R.drawable.ic_gps_not_fixed_black_48dp)
+                );
+            } else if (Order.closeOrder.equals(iOrder.getColor())) {
+                overlayItem = new OverlayItem(
+                    new GeoPoint(geoPoint.getLng(), geoPoint.getLat()),
+                    res.getDrawable(R.drawable.ic_clear_black_48dp)
+                );
+            } else if (Order.doneOrder.equals(iOrder.getColor())) {
+                overlayItem = new OverlayItem(
+                    new GeoPoint(geoPoint.getLng(), geoPoint.getLat()),
+                    res.getDrawable(R.drawable.ic_done_black_48dp)
+                );
+            } else {
+                continue;
+            }
+
             BalloonItem balloonItem = new BalloonItem(
                 getApplicationContext(),
                 new GeoPoint(geoPoint.getLng(), geoPoint.getLat())
             );
             String address = iOrder.getAddress();
-            address = address.replaceAll("г. Саратов, ","");
-            address = address.replaceAll("\\[Энгельс\\], ","");
+            address = address.replaceAll("г. Саратов, ", "");
+            address = address.replaceAll("\\[Энгельс\\], ", "");
             balloonItem.setText(SHORT_TIME_FORMAT.format(iOrder.getTime()) + "  " + address);
             overlayItem.setBalloonItem(balloonItem);
             overlay.addOverlayItem(overlayItem);
@@ -65,7 +79,7 @@ public class MapActivity extends AppCompatActivity {
         double maxLat, minLat, maxLon, minLon;
         maxLat = maxLon = Double.MIN_VALUE;
         minLat = minLon = Double.MAX_VALUE;
-        for (int i = 0; i < overlay.getOverlayItems().size(); i++){
+        for (int i = 0; i < overlay.getOverlayItems().size(); i++) {
             GeoPoint geoPoint = list.get(i).getGeoPoint();
 
             double lat = geoPoint.getLat();
