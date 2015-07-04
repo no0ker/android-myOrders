@@ -41,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         List<Order> orders = DataStorage.getOrders();
-        if(orders != null){
+        if (orders != null && !orders.isEmpty()) {
             ExpandableListAdapter adapter = new ExpListAdapter(this.getApplicationContext(), orders);
             expandableListView.setAdapter(adapter);
+        } else if (!isOrdersLoad) {
+            new ReciveOrdersOnClickListener(this).onClick();
         }
     }
 
@@ -56,30 +58,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.menu_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.menu_orders) {
-            if(isOrdersLoad){
-                Toast.makeText(getApplicationContext(),R.string.orders_is_load,Toast.LENGTH_SHORT).show();
-            } else {
-                new ReciveOrdersOnClickListener(this).onClick();
-            }
-        } else if (id == R.id.menu_map){
-            Intent intent = new Intent(MainActivity.this, MapActivity.class);
-            boolean ready = true;
-            for (Order iOrder : DataStorage.getOrders()) {
-                if (iOrder.getGeoPoint() == null || isOrdersLoad) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.orders_is_load), Toast.LENGTH_SHORT).show();
-                    ready = false;
-                }
-            }
-            if(ready){
+        switch (id) {
+            case R.id.menu_settings: {
+                Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                return true;
+            }
+            case R.id.menu_orders: {
+                if (isOrdersLoad) {
+                    Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
+                } else {
+                    new ReciveOrdersOnClickListener(this).onClick();
+                }
+                break;
+            }
+            case R.id.menu_map: {
+                Intent intent = new Intent(MainActivity.this, MapActivity.class);
+                boolean ready = true;
+                for (Order iOrder : DataStorage.getOrders()) {
+                    if (iOrder.getGeoPoint() == null || isOrdersLoad) {
+                        Toast.makeText(getApplicationContext(), getString(R.string.orders_is_load), Toast.LENGTH_SHORT).show();
+                        ready = false;
+                    }
+                }
+                if (ready) {
+                    startActivity(intent);
+                }
+                break;
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
