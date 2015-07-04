@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     if (iOrder.getGeoPoint() == null || isOrdersLoad) {
                         Toast.makeText(getApplicationContext(), getString(R.string.orders_is_load), Toast.LENGTH_SHORT).show();
                         ready = false;
+                        break;
                     }
                 }
                 if (ready) {

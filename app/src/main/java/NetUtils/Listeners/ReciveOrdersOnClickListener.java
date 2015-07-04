@@ -29,19 +29,20 @@ public class ReciveOrdersOnClickListener {
     private String password;
     private ProgressBar progressBar;
     private AsyncTaskWithProgressBar<Void, ProgressPoint, Void> asyncTaskWithProgressBar;
+    private SharedPreferences sharedPreferences;
 
     Activity parentActivity;
 
     public ReciveOrdersOnClickListener(Activity parentActivity) {
         this.parentActivity = parentActivity;
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
-        Map<String, ?> preferences = sharedPreferences.getAll();
-        this.login = (String) preferences.get(parentActivity.getString(R.string.login_key));
-        this.password = (String) preferences.get(parentActivity.getString(R.string.pass_key));
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
         this.progressBar = (ProgressBar) parentActivity.findViewById(R.id.progressBar);
     }
 
     public void onClick() {
+        Map<String, ?> preferences = sharedPreferences.getAll();
+        this.login = (String) preferences.get(parentActivity.getString(R.string.login_key));
+        this.password = (String) preferences.get(parentActivity.getString(R.string.pass_key));
 
         if (login == null || password == null) {
             Toast.makeText(parentActivity.getApplicationContext(), R.string.no_auth_data, Toast.LENGTH_SHORT).show();
