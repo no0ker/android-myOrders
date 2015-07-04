@@ -19,6 +19,7 @@ import NetUtils.Orders.Order;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     private boolean isOrdersLoad = false;
+    private ReciveOrdersOnClickListener reciveOrdersOnClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +42,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         List<Order> orders = DataStorage.getOrders();
+
+        reciveOrdersOnClickListener = (ReciveOrdersOnClickListener) getLastCustomNonConfigurationInstance();
+
+        if(reciveOrdersOnClickListener == null){
+            reciveOrdersOnClickListener = new ReciveOrdersOnClickListener(this);
+        } else {
+            reciveOrdersOnClickListener.setParentActivity(this);
+        }
+
         if (orders != null && !orders.isEmpty()) {
             ExpandableListAdapter adapter = new ExpListAdapter(this.getApplicationContext(), orders);
             expandableListView.setAdapter(adapter);
         } else if (!isOrdersLoad) {
-            new ReciveOrdersOnClickListener(this).onClick();
+            reciveOrdersOnClickListener.onClick();
         }
     }
 
@@ -68,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isOrdersLoad) {
                     Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
                 } else {
-                    new ReciveOrdersOnClickListener(this).onClick();
+                    reciveOrdersOnClickListener.onClick();
                 }
                 break;
             }
@@ -92,5 +102,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void setIsOrdersLoad(boolean isOrdersLoad) {
         this.isOrdersLoad = isOrdersLoad;
+    }
+
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return reciveOrdersOnClickListener;
     }
 }

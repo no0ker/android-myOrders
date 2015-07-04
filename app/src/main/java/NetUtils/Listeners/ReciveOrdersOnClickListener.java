@@ -28,6 +28,7 @@ public class ReciveOrdersOnClickListener {
     private String login;
     private String password;
     private ProgressBar progressBar;
+    private AsyncTaskWithProgressBar<Void, ProgressPoint, Void> asyncTaskWithProgressBar;
 
     Activity parentActivity;
 
@@ -47,13 +48,13 @@ public class ReciveOrdersOnClickListener {
             return;
         }
 
-        new AsyncTaskWithProgressBar<Void, ProgressPoint, Void>(parentActivity, R.id.progressText, R.id.progressBar) {
+        asyncTaskWithProgressBar = new AsyncTaskWithProgressBar<Void, ProgressPoint, Void>(parentActivity, R.id.progressText, R.id.progressBar) {
             private String message;
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                ((MainActivity)parentActivity).setIsOrdersLoad(true);
+                ((MainActivity) parentActivity).setIsOrdersLoad(true);
             }
 
             @Override
@@ -76,9 +77,7 @@ public class ReciveOrdersOnClickListener {
                     final ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.expandableListView);
                     expandableListView.setAdapter(adapter);
 
-
-                    new AsyncTaskWithProgressBar<Void, ProgressPoint, Void>(parentActivity, R.id.progressText, R.id.progressBar){
-
+                    AsyncTaskWithProgressBar<Void, ProgressPoint, Void> asyncTaskWithProgressBar = new AsyncTaskWithProgressBar<Void, ProgressPoint, Void>(parentActivity, R.id.progressText, R.id.progressBar) {
                         @Override
                         protected Void doInBackground(Void... voids) {
                             try {
@@ -99,14 +98,15 @@ public class ReciveOrdersOnClickListener {
                                 publishProgress(
                                     new ProgressPoint(parentActivity.getString(R.string.progress_end), 100)
                                 );
-                                ((MainActivity)parentActivity).setIsOrdersLoad(false);
+                                ((MainActivity) parentActivity).setIsOrdersLoad(false);
                             } catch (Exception e) {
                                 Log.d(TAG, Log.getStackTraceString(e));
                             }
                             return null;
                         }
-                    }.execute();
-
+                    };
+                    this.childTasks.add(asyncTaskWithProgressBar);
+                    asyncTaskWithProgressBar.execute();
                 }
                 if (message == null) {
                     if (DataStorage.getOrders().size() == 0) {
@@ -117,6 +117,12 @@ public class ReciveOrdersOnClickListener {
                 }
                 Toast.makeText(parentActivity.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             }
-        }.execute();
+        };
+        asyncTaskWithProgressBar.execute();
+    }
+
+    public void setParentActivity(Activity parentActivity) {
+        this.parentActivity = parentActivity;
+        asyncTaskWithProgressBar.setActivity(parentActivity);
     }
 }

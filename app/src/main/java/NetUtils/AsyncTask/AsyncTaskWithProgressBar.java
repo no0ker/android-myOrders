@@ -6,10 +6,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class AsyncTaskWithProgressBar<T, V extends ProgressPoint, W> extends AsyncTask<T, V, W> {
     private Activity activity;
     private TextView textView;
     private ProgressBar progressBar;
+    protected List<AsyncTaskWithProgressBar<Void, ProgressPoint, Void>> childTasks = new LinkedList<>();
 
     public AsyncTaskWithProgressBar(Activity activity, int textViewId, int progressBarId) {
         this.activity = activity;
@@ -32,19 +36,21 @@ public class AsyncTaskWithProgressBar<T, V extends ProgressPoint, W> extends Asy
 
     protected void setProgress(ProgressPoint progressPoint) {
         Integer progress = progressPoint.getProgress();
-        switch (progress) {
-            case 0: {
-                textView.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.VISIBLE);
-                break;
-            }
-            case 100: {
-                textView.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
-                break;
-            }
+        if (progress < 100) {
+            textView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        } else if (progress == 100) {
+            textView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
         textView.setText(progressPoint.getMessage());
         progressBar.setProgress(progress);
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+        for(AsyncTaskWithProgressBar i : childTasks){
+            i.setActivity(activity);
+        }
     }
 }
