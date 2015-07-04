@@ -24,5 +24,12 @@
     <string name="progress_load_comments">Загрузка комментариев и координат:</string>
     <string name="progress_end">Загрузка завершена.</string>
 
+    <string name="oper_call">Позвонить клиенту.</string>
+    <string name="oper_close">Закрыть заявку.</string>
+    <string name="oper_title">Операции с заявкой.</string>
+
+    <string name="ok">ОК</string>
+
+    <string name="in_progress">в разработке..</string>
 
 </resources>

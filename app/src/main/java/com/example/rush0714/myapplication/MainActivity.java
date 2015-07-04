@@ -1,5 +1,8 @@
 package com.example.rush0714.myapplication;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -32,11 +36,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long packedPosition = expandableListView.getExpandableListPosition(i);
-                int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+                final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
 
-                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-                intent.putExtra("order", groupPosition);
-                startActivity(intent);
+                AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+                adb.setTitle(getString(R.string.oper_title));
+                String operations[] = {getString(R.string.oper_call), getString(R.string.oper_close)};
+                adb.setSingleChoiceItems(operations, -1, null);
+                adb.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ListView lv = ((AlertDialog) dialogInterface).getListView();
+                        Integer chekedItem = lv.getCheckedItemPosition();
+                        switch (chekedItem) {
+                            case 0: {
+                                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
+                                intent.putExtra("order", groupPosition);
+                                startActivity(intent);
+                                break;
+                            }
+                            case 1: {
+                                Toast.makeText(
+                                    getApplicationContext(),
+                                    getString(R.string.in_progress),
+                                    Toast.LENGTH_SHORT).show();
+                                break;
+                            }
+                        }
+                    }
+                });
+                Dialog dialog = adb.create();
+                dialog.show();
                 return false;
             }
         });
@@ -45,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         reciveOrdersOnClickListener = (ReciveOrdersOnClickListener) getLastCustomNonConfigurationInstance();
 
-        if(reciveOrdersOnClickListener == null){
+        if (reciveOrdersOnClickListener == null) {
             reciveOrdersOnClickListener = new ReciveOrdersOnClickListener(this);
         } else {
             reciveOrdersOnClickListener.setParentActivity(this);
