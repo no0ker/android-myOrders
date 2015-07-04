@@ -18,7 +18,7 @@ import NetUtils.Orders.Order;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
-    private boolean isOrdersLoad = false;
+    private static boolean isOrdersLoad = false;
     private ReciveOrdersOnClickListener reciveOrdersOnClickListener;
 
     @Override

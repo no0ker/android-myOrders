@@ -78,34 +78,37 @@ public class ReciveOrdersOnClickListener {
                     final ExpandableListView expandableListView = (ExpandableListView) parentActivity.findViewById(R.id.expandableListView);
                     expandableListView.setAdapter(adapter);
 
-                    AsyncTaskWithProgressBar<Void, ProgressPoint, Void> asyncTaskWithProgressBar = new AsyncTaskWithProgressBar<Void, ProgressPoint, Void>(parentActivity, R.id.progressText, R.id.progressBar) {
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            try {
-                                List<Order> orders = DataStorage.getOrders();
-                                Integer incrementProgress = (80 / orders.size()) - 1;
-                                Integer increment = 0;
-                                Integer baseIncrement = 20;
-                                for (Order iOrder : DataStorage.getOrders()) {
+                    AsyncTaskWithProgressBar<Void, ProgressPoint, Void> asyncTaskWithProgressBar =
+                        new AsyncTaskWithProgressBar<Void, ProgressPoint, Void>(parentActivity, R.id.progressText, R.id.progressBar) {
+
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                try {
+                                    List<Order> orders = DataStorage.getOrders();
+                                    Integer incrementProgress = (80 / orders.size()) - 1;
+                                    Integer increment = 0;
+                                    Integer baseIncrement = 20;
+                                    for (Order iOrder : DataStorage.getOrders()) {
+                                        publishProgress(
+                                            new ProgressPoint(
+                                                parentActivity.getString(R.string.progress_load_comments) + " " + iOrder.getAddress(),
+                                                baseIncrement + increment * incrementProgress)
+                                        );
+                                        new DataSiteHelperV2().setComments(iOrder, login, password);
+                                        iOrder.setGeoPoint(new GeoCoderHelper().getGeoPoint(iOrder.getAddress()));
+                                        ++increment;
+                                    }
                                     publishProgress(
-                                        new ProgressPoint(
-                                            parentActivity.getString(R.string.progress_load_comments) + " " + iOrder.getAddress(),
-                                            baseIncrement + increment * incrementProgress)
+                                        new ProgressPoint(parentActivity.getString(R.string.progress_end), 100)
                                     );
-                                    new DataSiteHelperV2().setComments(iOrder, login, password);
-                                    iOrder.setGeoPoint(new GeoCoderHelper().getGeoPoint(iOrder.getAddress()));
-                                    ++increment;
+                                    ((MainActivity) parentActivity).setIsOrdersLoad(false);
+                                } catch (Exception e) {
+                                    Log.d(TAG, Log.getStackTraceString(e));
                                 }
-                                publishProgress(
-                                    new ProgressPoint(parentActivity.getString(R.string.progress_end), 100)
-                                );
-                                ((MainActivity) parentActivity).setIsOrdersLoad(false);
-                            } catch (Exception e) {
-                                Log.d(TAG, Log.getStackTraceString(e));
+                                return null;
                             }
-                            return null;
-                        }
-                    };
+
+                        };
                     this.childTasks.add(asyncTaskWithProgressBar);
                     asyncTaskWithProgressBar.execute();
                 }

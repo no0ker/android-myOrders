@@ -13,12 +13,15 @@ public class AsyncTaskWithProgressBar<T, V extends ProgressPoint, W> extends Asy
     private Activity activity;
     private TextView textView;
     private ProgressBar progressBar;
+    private int textViewId;
+    private int progressBarId;
     protected List<AsyncTaskWithProgressBar<Void, ProgressPoint, Void>> childTasks = new LinkedList<>();
 
     public AsyncTaskWithProgressBar(Activity activity, int textViewId, int progressBarId) {
         this.activity = activity;
-        this.textView = (TextView) activity.findViewById(textViewId);
-        this.progressBar = (ProgressBar) activity.findViewById(progressBarId);
+        this.textViewId = textViewId;
+        this.progressBarId = progressBarId;
+        synchronizeViews();
     }
 
     @Override
@@ -49,8 +52,14 @@ public class AsyncTaskWithProgressBar<T, V extends ProgressPoint, W> extends Asy
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+        synchronizeViews();
         for(AsyncTaskWithProgressBar i : childTasks){
             i.setActivity(activity);
         }
+    }
+
+    protected void synchronizeViews(){
+        this.textView = (TextView) activity.findViewById(textViewId);
+        this.progressBar = (ProgressBar) activity.findViewById(progressBarId);
     }
 }
