@@ -52,7 +52,10 @@ public class MapActivity extends AppCompatActivity {
                 getApplicationContext(),
                 new GeoPoint(geoPoint.getLng(), geoPoint.getLat())
             );
-            balloonItem.setText(SHORT_TIME_FORMAT.format(iOrder.getTime()) + "  " + iOrder.getAddress());
+            String address = iOrder.getAddress();
+            address = address.replaceAll("г. Саратов, ","");
+            address = address.replaceAll("\\[Энгельс\\], ","");
+            balloonItem.setText(SHORT_TIME_FORMAT.format(iOrder.getTime()) + "  " + address);
             overlayItem.setBalloonItem(balloonItem);
             overlay.addOverlayItem(overlayItem);
         }

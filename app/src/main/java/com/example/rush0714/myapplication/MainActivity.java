@@ -18,6 +18,7 @@ import NetUtils.Orders.Order;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
+    private boolean isOrdersLoad = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +61,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         } else if (id == R.id.menu_orders) {
-            new ReciveOrdersOnClickListener(this).onClick();
+            if(isOrdersLoad){
+                Toast.makeText(getApplicationContext(),R.string.orders_is_load,Toast.LENGTH_SHORT).show();
+            } else {
+                new ReciveOrdersOnClickListener(this).onClick();
+            }
         } else if (id == R.id.menu_map){
             Intent intent = new Intent(MainActivity.this, MapActivity.class);
             boolean ready = true;
             for (Order iOrder : DataStorage.getOrders()) {
-                if (iOrder.getGeoPoint() == null) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.koord_later), Toast.LENGTH_SHORT).show();
+                if (iOrder.getGeoPoint() == null || isOrdersLoad) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.orders_is_load), Toast.LENGTH_SHORT).show();
                     ready = false;
                 }
             }
@@ -78,5 +83,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void setIsOrdersLoad(boolean isOrdersLoad) {
+        this.isOrdersLoad = isOrdersLoad;
+    }
 }
