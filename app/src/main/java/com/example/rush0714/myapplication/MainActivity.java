@@ -15,6 +15,8 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.rush0714.myapplication.Activities.ActivityOrderClose;
+
 import java.util.List;
 
 import NetUtils.Listeners.ReciveOrdersOnClickListener;
@@ -47,20 +49,21 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ListView lv = ((AlertDialog) dialogInterface).getListView();
                         Integer chekedItem = lv.getCheckedItemPosition();
+
+                        Intent intent = null;
                         switch (chekedItem) {
                             case 0: {
-                                Intent intent = new Intent(MainActivity.this, OrderActivity.class);
-                                intent.putExtra("order", groupPosition);
-                                startActivity(intent);
+                                intent = new Intent(MainActivity.this, OrderActivity.class);
                                 break;
                             }
                             case 1: {
-                                Toast.makeText(
-                                    getApplicationContext(),
-                                    getString(R.string.in_progress),
-                                    Toast.LENGTH_SHORT).show();
+                                intent = new Intent(MainActivity.this, ActivityOrderClose.class);
                                 break;
                             }
+                        }
+                        if(intent != null){
+                            intent.putExtra("order", groupPosition);
+                            startActivity(intent);
                         }
                     }
                 });

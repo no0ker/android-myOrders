@@ -29,7 +29,8 @@
     <string name="oper_title">Операции с заявкой.</string>
 
     <string name="ok">ОК</string>
+    <string name="error">ошибка =(</string>
 
-    <string name="in_progress">в разработке..</string>
+    <string name="button_AOrderClose_add_text">Добавить услугу</string>
 
 </resources>

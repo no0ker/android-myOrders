@@ -23,7 +23,7 @@ import NetUtils.Resources.Resources;
 
 public class DataSiteHelperV2 {
 
-    public void authorize(String login, String password) throws Exception {
+    public static void authorize(String login, String password) throws Exception {
         boolean isExpired = true;
         CookieStore cookieStore = DataStorage.getCookieStore();
         for (HttpCookie httpCookie : cookieStore.getCookies()) {
