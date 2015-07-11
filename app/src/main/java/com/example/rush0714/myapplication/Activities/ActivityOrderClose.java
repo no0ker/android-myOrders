@@ -49,7 +49,7 @@ public class ActivityOrderClose extends AppCompatActivity {
                         @Override
                         public Map<String, CSOrderService> parse(String stringIn) {
                             Document doc = (Document) Jsoup.parse(stringIn);
-                            
+
                             return null;
                         }
                     });
