@@ -1,9 +1,14 @@
 package com.example.rush0714.myapplication.Activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +32,7 @@ import NetUtils.Orders.Order;
 
 public class ActivityOrderClose extends AppCompatActivity {
     private Order order;
-    private String login;
-    private String password;
+    private List<CSOrderService> orderServices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +45,34 @@ public class ActivityOrderClose extends AppCompatActivity {
         TextView textView = (TextView) findViewById(R.id.AOrderCLoseOrderAddress);
         textView.setText(order.getAddress());
 
-        Button addButton = (Button) findViewById(R.id.button_AOrderClose_add_id);
-
-        addButton.setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.button_AOrderClose_add_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlertDialog.Builder adb = new AlertDialog.Builder(ActivityOrderClose.this);
+                adb.setTitle(getString(R.string.button_AOrderClose_service_orders));
+                List<String> services = new LinkedList<String>();
+                for (CSOrderService i : orderServices) {
+                    services.add(i.getName() + "  -  " + i.getPrice() + " р.");
+                }
 
+                adb.setSingleChoiceItems(new ArrayAdapter<String>(getApplicationContext(), R.layout.abc_list_menu_item_radio, services), 0, null);
+//                adb.setSingleChoiceItems(operations, 0, null);
+
+                adb.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ListView lv = ((AlertDialog) dialogInterface).getListView();
+                        Integer chekedItem = lv.getCheckedItemPosition();
+
+                        Toast.makeText(getApplicationContext(), " " + chekedItem, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Dialog dialog = adb.create();
+                dialog.show();
             }
         });
+
+        getOrderServices();
     }
 
     private void getOrderServices() {
@@ -80,9 +104,7 @@ public class ActivityOrderClose extends AppCompatActivity {
                 }
             });
 
-            List<CSOrderService> orders = (List<CSOrderService>) csNetUtils.doRequest();
-
-            Double a = 4.4;
+            orderServices = (List<CSOrderService>) csNetUtils.doRequest();
 
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();

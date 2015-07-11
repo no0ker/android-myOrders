@@ -31,11 +31,11 @@ public abstract class CSNetUtils<T> {
     public T doRequest() throws Exception {
         DataSiteHelperV2.authorize(login, password);
         csRequest.setVariables();
-        final String[] siteResult = new String[0];
+        final String[] siteResult = new String[1];
 
-        new AsyncTask<Void, Void, String>() {
+        AsyncTask<Void, Void, T> asyncTask = new AsyncTask<Void, Void, T>() {
             @Override
-            protected String doInBackground(Void... voids) {
+            protected T doInBackground(Void... voids) {
                 String siteString = null;
                 try {
                     CookieManager cookieManager = new CookieManager(DataStorage.getCookieStore(), CookiePolicy.ACCEPT_ALL);
@@ -83,16 +83,10 @@ public abstract class CSNetUtils<T> {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return siteString;
+                return parse(siteString);
             }
-
-            @Override
-            protected void onPostExecute(String s) {
-                siteResult[0] = s;
-            }
-        }.execute();
-
-        return parse(siteResult[0]);
+        };
+        return (T) asyncTask.execute();
     }
 
     public abstract T parse(String stringIn);

@@ -32,5 +32,6 @@
     <string name="error">ошибка =(</string>
 
     <string name="button_AOrderClose_add_text">Добавить услугу</string>
+    <string name="button_AOrderClose_service_orders">Добавить услугу</string>
 
 </resources>
