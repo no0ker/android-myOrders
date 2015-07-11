@@ -5,7 +5,7 @@ public class CSOrderService {
     Integer value;
     Integer price;
 
-    public CSOrderService(String name, Integer price, Integer value) {
+    public CSOrderService(String name, Integer value, Integer price) {
         this.name = name;
         this.price = price;
         this.value = value;

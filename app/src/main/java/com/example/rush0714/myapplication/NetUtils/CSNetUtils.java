@@ -14,24 +14,20 @@ import java.net.URL;
 
 import NetUtils.DataSite.DataSiteHelperV2;
 
-public abstract class CSNetUtils<T> {
+public class CSNetUtils<T> {
     private String login;
     private String password;
     private CSRequest csRequest;
+    private CSParser<T> csParser;
 
     public CSNetUtils(String login, String password) {
         this.login = login;
         this.password = password;
     }
 
-    public void setCsRequest(CSRequest csRequest) {
-        this.csRequest = csRequest;
-    }
-
-    public T doRequest() throws Exception {
+    public AsyncTask<Void, Void, T> makeTask() throws Exception {
         DataSiteHelperV2.authorize(login, password);
         csRequest.setVariables();
-        final String[] siteResult = new String[1];
 
         AsyncTask<Void, Void, T> asyncTask = new AsyncTask<Void, Void, T>() {
             @Override
@@ -83,11 +79,19 @@ public abstract class CSNetUtils<T> {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return parse(siteString);
+                return csParser.parse(siteString);
             }
         };
-        return (T) asyncTask.execute();
+        return asyncTask;
     }
 
-    public abstract T parse(String stringIn);
+//    public abstract T parse(String stringIn);
+
+    public void setCsParser(CSParser<T> csParser) {
+        this.csParser = csParser;
+    }
+
+    public void setCsRequest(CSRequest csRequest) {
+        this.csRequest = csRequest;
+    }
 }
