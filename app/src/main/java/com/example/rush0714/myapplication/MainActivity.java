@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.rush0714.myapplication.Activities.ActivityOrderClose;
 
+import java.util.Arrays;
 import java.util.List;
 
 import NetUtils.Listeners.ReciveOrdersOnClickListener;
@@ -43,7 +45,14 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
                 adb.setTitle(getString(R.string.oper_title));
                 String operations[] = {getString(R.string.oper_call), getString(R.string.oper_close)};
-                adb.setSingleChoiceItems(operations, -1, null);
+//                adb.setSingleChoiceItems(operations, -1, null);
+
+                adb.setSingleChoiceItems(
+                    new ArrayAdapter<String>(
+                        getApplicationContext(), R.layout.list_order_close_services, Arrays.asList(operations)),
+                    0, null);
+
+
                 adb.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

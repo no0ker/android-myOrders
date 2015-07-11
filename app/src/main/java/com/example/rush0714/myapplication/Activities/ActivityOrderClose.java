@@ -37,6 +37,7 @@ import NetUtils.Orders.Order;
 public class ActivityOrderClose extends AppCompatActivity {
     private Order order;
     private List<CSOrderService> orderServices;
+    private List<CSOrderService> orderServicesSelected;
     private AsyncTask<Void, Void, List<CSOrderService>> asyncTask;
 
     @Override
@@ -56,11 +57,12 @@ public class ActivityOrderClose extends AppCompatActivity {
                 try {
                     orderServices = asyncTask.get(1, TimeUnit.SECONDS);
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 if (orderServices == null || orderServices.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
                 } else {
                     AlertDialog.Builder adb = new AlertDialog.Builder(ActivityOrderClose.this);
                     adb.setTitle(getString(R.string.button_AOrderClose_service_orders));
@@ -69,7 +71,10 @@ public class ActivityOrderClose extends AppCompatActivity {
                         services.add(i.getName());
                     }
 
-                    adb.setSingleChoiceItems(new ArrayAdapter<String>(getApplicationContext(), R.layout.list_order_close_services, services), 0, null);
+                    adb.setSingleChoiceItems(
+                        new ArrayAdapter<String>(
+                            getApplicationContext(), R.layout.list_order_close_services, services),
+                        0, null);
 
                     adb.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         @Override

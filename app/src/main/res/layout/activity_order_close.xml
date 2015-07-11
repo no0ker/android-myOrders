@@ -8,7 +8,6 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.example.rush0714.myapplication.Activities.ActivityOrderClose">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,15 +16,18 @@
 
         <TextView
             android:id="@+id/AOrderCLoseOrderAddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/abc_text_size_medium_material"/>
 
         <Button
+            android:id="@+id/button_AOrderClose_add_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="@string/button_AOrderClose_add_text"
-            android:id="@+id/button_AOrderClose_add_id"/>
+            android:text="@string/button_AOrderClose_add_text"/>
 
 
     </LinearLayout>
