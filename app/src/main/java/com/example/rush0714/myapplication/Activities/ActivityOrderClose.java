@@ -69,7 +69,7 @@ public class ActivityOrderClose extends AppCompatActivity {
                         services.add(i.getName());
                     }
 
-                    adb.setSingleChoiceItems(new ArrayAdapter<String>(getApplicationContext(), R.layout.abc_list_menu_item_radio, services), 0, null);
+                    adb.setSingleChoiceItems(new ArrayAdapter<String>(getApplicationContext(), R.layout.list_order_close_services, services), 0, null);
 
                     adb.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         @Override
