@@ -11,13 +11,16 @@ import com.example.rush0714.myapplication.DataStorage;
 import com.example.rush0714.myapplication.Helpers.AuthHelper;
 import com.example.rush0714.myapplication.NetUtils.CSNetUtils;
 import com.example.rush0714.myapplication.NetUtils.CSOrderService;
-import com.example.rush0714.myapplication.NetUtils.CSParser;
 import com.example.rush0714.myapplication.NetUtils.CSRequest;
 import com.example.rush0714.myapplication.R;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import NetUtils.Orders.Order;
@@ -37,34 +40,53 @@ public class ActivityOrderClose extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.AOrderCLoseOrderAddress);
         textView.setText(order.getAddress());
-        final Map<String, String> authData = AuthHelper.getAuthData(this);
 
         Button addButton = (Button) findViewById(R.id.button_AOrderClose_add_id);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    CSNetUtils csNetUtils = new CSNetUtils(authData.get("l"), authData.get("p"));
-                    csNetUtils.setCsParser(new CSParser<String, CSOrderService>(){
-                        @Override
-                        public Map<String, CSOrderService> parse(String stringIn) {
-                            Document doc = (Document) Jsoup.parse(stringIn);
 
-                            return null;
-                        }
-                    });
-                    csNetUtils.setCsRequest(new CSRequest() {
-                        @Override
-                        public void setVariables() {
-                            method = Method.GET;
-                            address = order.getLink();
-                        }
-                    });
-                    csNetUtils.doRequest();
-                } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT);
-                }
             }
         });
     }
+
+    private void getOrderServices() {
+        try {
+            Map<String, String> authData = AuthHelper.getAuthData(this);
+
+            CSNetUtils<List<CSOrderService>> csNetUtils = new CSNetUtils<List<CSOrderService>>(authData.get("l"), authData.get("p")) {
+                public List<CSOrderService> parse(String stringIn) {
+                    Document doc = Jsoup.parse(stringIn);
+                    Element element = doc.getElementsByClass("jobs").first();
+                    Elements elements = element.getElementsByTag("option");
+                    List<CSOrderService> result = new LinkedList<>();
+                    Integer i = 0;
+                    for (Element iElement : elements) {
+                        String name = iElement.text();
+                        Integer value = Integer.parseInt(iElement.attr("value"));
+                        Integer price = Integer.parseInt(iElement.attr("price"));
+                        result.add(new CSOrderService(name, value, price));
+                    }
+                    return result;
+                }
+            };
+
+            csNetUtils.setCsRequest(new CSRequest() {
+                @Override
+                public void setVariables() {
+                    method = Method.GET;
+                    address = order.getLink();
+                }
+            });
+
+            List<CSOrderService> orders = (List<CSOrderService>) csNetUtils.doRequest();
+
+            Double a = 4.4;
+
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+        }
+    }
 }
+

@@ -9,16 +9,14 @@ import java.io.BufferedInputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.CookieStore;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import NetUtils.DataSite.DataSiteHelperV2;
 
-public class CSNetUtils {
+public abstract class CSNetUtils<T> {
     private String login;
     private String password;
-    private CSParser csParser;
     private CSRequest csRequest;
 
     public CSNetUtils(String login, String password) {
@@ -26,25 +24,20 @@ public class CSNetUtils {
         this.password = password;
     }
 
-    public void setCsParser(CSParser csParser) {
-        this.csParser = csParser;
-    }
-
     public void setCsRequest(CSRequest csRequest) {
         this.csRequest = csRequest;
     }
 
-    public void doRequest() throws Exception {
+    public T doRequest() throws Exception {
         DataSiteHelperV2.authorize(login, password);
         csRequest.setVariables();
-        final String[] siteResult = new String[1];
+        final String[] siteResult = new String[0];
 
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                String result = null;
+                String siteString = null;
                 try {
-                    CookieStore cookieStore = DataStorage.getCookieStore();
                     CookieManager cookieManager = new CookieManager(DataStorage.getCookieStore(), CookiePolicy.ACCEPT_ALL);
                     CookieHandler.setDefault(cookieManager);
                     URL url = new URL(csRequest.getAddress());
@@ -66,7 +59,7 @@ public class CSNetUtils {
                         connection.disconnect();
 
                         DataStorage.setCookieStore(cookieManager.getCookieStore());
-                        result = stringBuilder.toString();
+                        siteString = stringBuilder.toString();
 //                        OrderHelper.parseOrders(res);
                     } else if (CSRequest.Method.GET.equals(csRequest.getMethod())) {
 
@@ -90,7 +83,7 @@ public class CSNetUtils {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                return result;
+                return siteString;
             }
 
             @Override
@@ -99,7 +92,8 @@ public class CSNetUtils {
             }
         }.execute();
 
-
-
+        return parse(siteResult[0]);
     }
+
+    public abstract T parse(String stringIn);
 }
