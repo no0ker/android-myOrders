@@ -81,7 +81,7 @@ public class ActivityOrderClose extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             ListView lv = ((AlertDialog) dialogInterface).getListView();
                             Integer chekedItem = lv.getCheckedItemPosition();
-
+                            
                             Toast.makeText(getApplicationContext(), " " + chekedItem, Toast.LENGTH_SHORT).show();
                         }
                     });
