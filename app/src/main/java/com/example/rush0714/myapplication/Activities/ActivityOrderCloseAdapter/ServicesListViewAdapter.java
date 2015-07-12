@@ -9,48 +9,41 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.rush0714.myapplication.Activities.ActivityOrderClose;
 import com.example.rush0714.myapplication.NetUtils.CSOrderService;
 import com.example.rush0714.myapplication.R;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ServicesListViewAdapter extends ArrayAdapter<CSOrderService> {
-    Activity parentActivity;
-    int resource;
-    List<CSOrderService> csOrderServices;
-    Map<Integer, Integer> csOrderServicesCounts;
+    private Activity parentActivity;
+    private List<CSOrderService> csOrderServicesSelected;
+    private Map<Integer, Integer> csOrderServicesCounts;
     private LayoutInflater lInflater;
 
     String test;
 
     public ServicesListViewAdapter(
+        Context context,
         Activity activity,
-        int resource,
-        List<CSOrderService> objects,
+        List<CSOrderService> csOrderServicesSelected,
         Map<Integer, Integer> csOrderServicesCounts) {
 
-        super(activity.getApplicationContext(), resource, objects);
+        super(context, R.layout.list_order_close_services_editable);
         this.parentActivity = activity;
-        this.resource = resource;
-        this.csOrderServices = objects;
-        if (csOrderServicesCounts == null) {
-            this.csOrderServicesCounts = new ConcurrentHashMap<Integer, Integer>();
-        } else {
-            this.csOrderServicesCounts = csOrderServicesCounts;
-        }
+        this.csOrderServicesSelected = csOrderServicesSelected;
+        this.csOrderServicesCounts = csOrderServicesCounts;
         lInflater = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
-
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View cView = convertView;
         if (cView == null) {
-            cView = lInflater.inflate(resource, parent, false);
+            cView = lInflater.inflate(R.layout.list_order_close_services_editable, parent, false);
         }
-        final CSOrderService csOrderService = csOrderServices.get(position);
+        CSOrderService csOrderService = csOrderServicesSelected.get(position);
 
         TextView price = (TextView) cView.findViewById(R.id.price);
         TextView priceEnd = (TextView) cView.findViewById(R.id.priceEnd);
@@ -71,29 +64,37 @@ public class ServicesListViewAdapter extends ArrayAdapter<CSOrderService> {
         }
 
         Button buttonInr = (Button) cView.findViewById(R.id.buttonIncr);
-        buttonInr.setOnClickListener(new ButtonIncrListener(cView, csOrderServicesCounts, position, parentActivity));
+        buttonInr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ActivityOrderClose) parentActivity).increment(position);
+            }
+        });
 
         Button buttonDecr = (Button) cView.findViewById(R.id.buttonDecr);
-        buttonDecr.setOnClickListener(new ButtonDecrListener(cView, csOrderServicesCounts, position, parentActivity));
+        buttonDecr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ActivityOrderClose) parentActivity).decrement(position);
+            }
+        });
 
         Button buttonDelete = (Button) cView.findViewById(R.id.buttonDelete);
-        buttonDelete.setOnClickListener(new ButtonDeleteListener(position, parentActivity));
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((ActivityOrderClose) parentActivity).remove(position);
+            }
+        });
 
         return cView;
     }
 
     @Override
     public int getCount() {
-        return csOrderServices.size();
+        return csOrderServicesSelected.size();
     }
 
-    public Map<Integer, Integer> getCsOrderServicesCounts() {
-        return csOrderServicesCounts;
-    }
-
-    public List<CSOrderService> getCsOrderServices() {
-        return csOrderServices;
-    }
 }
 
 

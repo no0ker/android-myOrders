@@ -11,13 +11,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/AOrderCLoseOrderAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="left"
             android:textColor="@color/black"
             android:textSize="@dimen/abc_text_size_medium_material"/>
 
@@ -25,35 +25,33 @@
             android:id="@+id/list_AOrderClose_services"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
-
-        <TextView
-            android:id="@+id/AOrderClose_countSum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:textColor="@color/red"
-            android:textSize="@dimen/abc_text_size_large_material"
-            android:textStyle="bold"/>
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button_AOrderClose_add_id"
+            <TextView
+                android:id="@+id/AOrderClose_countSum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:text="@string/button_AOrderClose_add_text"/>
+                android:textColor="@color/red"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/button_AOrderClose_send_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/ok"/>
+
+            <Button
+                android:id="@+id/button_AOrderClose_add_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_AOrderClose_add_text"/>
         </LinearLayout>
 
     </LinearLayout>

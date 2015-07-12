@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import NetUtils.Orders.Order;
@@ -42,20 +43,86 @@ public class ActivityOrderClose extends AppCompatActivity {
     private Order order;
     private List<CSOrderService> orderServices;
     private List<CSOrderService> orderServicesSelected = new ArrayList<CSOrderService>();
-    private AsyncTask<Void, Void, List<CSOrderService>> asyncTask;
+    private Map<Integer, Integer> orderServicesCounts = new ConcurrentHashMap<Integer, Integer>();
     private ServicesListViewAdapter servicesListViewAdapter;
+    private AsyncTask<Void, Void, List<CSOrderService>> asyncTask;
+    private TextView sumCount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_close);
-
+        sumCount = (TextView) findViewById(R.id.AOrderClose_countSum);
+        servicesListViewAdapter = new ServicesListViewAdapter(
+            getApplicationContext(),
+            ActivityOrderClose.this,
+            orderServicesSelected,
+            orderServicesCounts);
+        ListView listView = (ListView) findViewById(R.id.list_AOrderClose_services);
+        listView.setAdapter(servicesListViewAdapter);
+        
         int orderNo = (int) getIntent().getExtras().getSerializable("order");
         order = DataStorage.getOrder(orderNo);
 
         TextView textView = (TextView) findViewById(R.id.AOrderCLoseOrderAddress);
         textView.setText(order.getAddress());
+        getOrderServices();
+        setButtonListener();
+    }
 
+
+    public void refresh() {
+        Integer sum = 0;
+        for (int i = 0; i < orderServicesSelected.size(); i++) {
+            if (orderServicesCounts.containsKey(i)) {
+                sum += orderServicesSelected.get(i).getPrice() * orderServicesCounts.get(i);
+            } else {
+                sum += orderServicesSelected.get(i).getPrice();
+            }
+        }
+        sumCount.setText("" + sum.toString());
+        servicesListViewAdapter.notifyDataSetChanged();
+    }
+
+
+    public void increment(int position) {
+        if (orderServicesCounts.containsKey(position)) {
+            int i = orderServicesCounts.get(position);
+            ++i;
+            orderServicesCounts.put(position, i);
+        } else {
+            orderServicesCounts.put(position, 2);
+        }
+        servicesListViewAdapter.notifyDataSetChanged();
+        refresh();
+    }
+
+    public void decrement(int position) {
+        if (orderServicesCounts.containsKey(position)) {
+            int i = orderServicesCounts.get(position);
+            --i;
+            if (i < 0) {
+                i = 0;
+            }
+            orderServicesCounts.put(position, i);
+        } else {
+            orderServicesCounts.put(position, 2);
+        }
+        servicesListViewAdapter.notifyDataSetChanged();
+        refresh();
+    }
+
+    public void remove(int position) {
+        if (orderServicesCounts.containsKey(position)) {
+            orderServicesCounts.remove(position);
+        }
+        orderServicesSelected.remove(position);
+        servicesListViewAdapter.notifyDataSetChanged();
+        refresh();
+    }
+
+    public void setButtonListener() {
         ((Button) findViewById(R.id.button_AOrderClose_add_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,18 +154,9 @@ public class ActivityOrderClose extends AppCompatActivity {
                             ListView lv = ((AlertDialog) dialogInterface).getListView();
                             Integer chekedItem = lv.getCheckedItemPosition();
                             orderServicesSelected.add(orderServices.get(chekedItem));
+//                            servicesListViewAdapter.notifyDataSetChanged();
 
-//                            ListView orderServicesView = (ListView) findViewById(R.id.list_AOrderClose_services);
-//
-//                            servicesListViewAdapter = new ServicesListViewAdapter(
-//                                ActivityOrderClose.this,
-//                                R.layout.list_order_close_services_editable,
-//                                orderServicesSelected,
-//                                null);
-//
-//                            orderServicesView.setAdapter(servicesListViewAdapter);
-
-                            setAdapter();
+                            refresh();
 
                             Toast.makeText(getApplicationContext(), " " + chekedItem, Toast.LENGTH_SHORT).show();
                         }
@@ -112,11 +170,9 @@ public class ActivityOrderClose extends AppCompatActivity {
         ((Button) findViewById(R.id.button_AOrderClose_send_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                servicesListViewAdapter.getCsOrderServices().remove(0);
+
             }
         });
-
-        getOrderServices();
     }
 
     private void getOrderServices() {
@@ -166,50 +222,6 @@ public class ActivityOrderClose extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
             Log.d("a", Log.getStackTraceString(e));
         }
-    }
-
-    public void delete(Integer position) {
-        Map<Integer, Integer> counts = servicesListViewAdapter.getCsOrderServicesCounts();
-        if (counts.containsKey(position)) {
-            counts.remove(position);
-        }
-        orderServicesSelected.remove((int) position);
-        setAdapter(counts);
-        refresh();
-    }
-
-    public void setAdapter() {
-        if (servicesListViewAdapter != null) {
-            Map<Integer, Integer> counts = servicesListViewAdapter.getCsOrderServicesCounts();
-            setAdapter(counts);
-        } else {
-            setAdapter(null);
-        }
-    }
-
-    public void setAdapter(Map<Integer, Integer> counts) {
-        ListView orderServicesView = (ListView) findViewById(R.id.list_AOrderClose_services);
-        servicesListViewAdapter = new ServicesListViewAdapter(
-            ActivityOrderClose.this,
-            R.layout.list_order_close_services_editable,
-            orderServicesSelected,
-            counts);
-        orderServicesView.setAdapter(servicesListViewAdapter);
-    }
-
-    public void refresh() {
-        List<CSOrderService> orders = servicesListViewAdapter.getCsOrderServices();
-        Map<Integer, Integer> counts = servicesListViewAdapter.getCsOrderServicesCounts();
-        TextView sumCount = (TextView) findViewById(R.id.AOrderClose_countSum);
-        Integer sum = 0;
-        for (int i = 0; i < orders.size(); i++) {
-            if (counts.containsKey(i)) {
-                sum += orders.get(i).getPrice() * counts.get(i);
-            } else {
-                sum += orders.get(i).getPrice();
-            }
-        }
-        sumCount.setText("" + sum.toString());
     }
 }
 
