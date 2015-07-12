@@ -41,6 +41,14 @@
                 android:textSize="@dimen/abc_text_size_large_material"
                 android:textStyle="bold"/>
 
+            <TextView
+                android:id="@+id/AOrderClose_act"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:textSize="@dimen/abc_text_size_large_material"
+                android:textStyle="bold"/>
+
             <Button
                 android:id="@+id/button_AOrderClose_send_id"
                 android:layout_width="wrap_content"
@@ -52,6 +60,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_AOrderClose_add_text"/>
+
+            <Button
+                android:id="@+id/button_AOrderClose_add_act"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_AOrderClose_add_text"/>
+
+
         </LinearLayout>
 
     </LinearLayout>

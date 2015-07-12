@@ -74,6 +74,7 @@ public class ActivityOrderClose extends AppCompatActivity {
         textView.setText(order.getAddress());
         getOrderServices();
         setButtonListener();
+        setButtonListener2();
     }
 
 
@@ -186,6 +187,16 @@ public class ActivityOrderClose extends AppCompatActivity {
         });
 
         ((Button) findViewById(R.id.button_AOrderClose_send_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
+    public void setButtonListener2() {
+        Button button = (Button) findViewById(R.id.button_AOrderClose_add_act);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
