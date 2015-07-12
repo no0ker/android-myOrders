@@ -20,6 +20,7 @@ import com.example.rush0714.myapplication.DataStorage;
 import com.example.rush0714.myapplication.Helpers.AuthHelper;
 import com.example.rush0714.myapplication.NetUtils.CSNetUtils;
 import com.example.rush0714.myapplication.NetUtils.CSOrderService;
+import com.example.rush0714.myapplication.NetUtils.CSParseResult;
 import com.example.rush0714.myapplication.NetUtils.CSParser;
 import com.example.rush0714.myapplication.NetUtils.CSPostExecute;
 import com.example.rush0714.myapplication.NetUtils.CSRequest;
@@ -28,14 +29,18 @@ import com.example.rush0714.myapplication.R;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import NetUtils.Orders.Order;
 
@@ -45,7 +50,7 @@ public class ActivityOrderClose extends AppCompatActivity {
     private List<CSOrderService> orderServicesSelected = new ArrayList<CSOrderService>();
     private Map<Integer, Integer> orderServicesCounts = new ConcurrentHashMap<Integer, Integer>();
     private ServicesListViewAdapter servicesListViewAdapter;
-    private AsyncTask<Void, Void, List<CSOrderService>> asyncTask;
+    private AsyncTask<Void, Void, CSParseResult> asyncTask;
     private TextView sumCount;
 
 
@@ -61,7 +66,7 @@ public class ActivityOrderClose extends AppCompatActivity {
             orderServicesCounts);
         ListView listView = (ListView) findViewById(R.id.list_AOrderClose_services);
         listView.setAdapter(servicesListViewAdapter);
-        
+
         int orderNo = (int) getIntent().getExtras().getSerializable("order");
         order = DataStorage.getOrder(orderNo);
 
@@ -94,7 +99,6 @@ public class ActivityOrderClose extends AppCompatActivity {
         } else {
             orderServicesCounts.put(position, 2);
         }
-        servicesListViewAdapter.notifyDataSetChanged();
         refresh();
     }
 
@@ -118,7 +122,6 @@ public class ActivityOrderClose extends AppCompatActivity {
             orderServicesCounts.remove(position);
         }
         orderServicesSelected.remove(position);
-        servicesListViewAdapter.notifyDataSetChanged();
         refresh();
     }
 
@@ -127,7 +130,7 @@ public class ActivityOrderClose extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    orderServices = asyncTask.get(1, TimeUnit.SECONDS);
+                    orderServices = asyncTask.get(1, TimeUnit.SECONDS).getCsOrderServices();
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
                     return;
@@ -153,12 +156,27 @@ public class ActivityOrderClose extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             ListView lv = ((AlertDialog) dialogInterface).getListView();
                             Integer chekedItem = lv.getCheckedItemPosition();
-                            orderServicesSelected.add(orderServices.get(chekedItem));
-//                            servicesListViewAdapter.notifyDataSetChanged();
 
+                            CSOrderService serviceSelected = orderServices.get(chekedItem);
+                            Boolean stillExists = false;
+
+                            for (int j = 0; j < orderServicesSelected.size(); j++) {
+                                CSOrderService si = orderServicesSelected.get(j);
+                                if (si.getValue().equals(serviceSelected.getValue())) {
+                                    if (orderServicesCounts.containsKey(j)) {
+                                        int tmp = orderServicesCounts.get(j);
+                                        orderServicesCounts.put(j, ++tmp);
+                                    } else {
+                                        orderServicesCounts.put(j, 2);
+                                    }
+                                    stillExists = true;
+                                    break;
+                                }
+                            }
+                            if (!stillExists) {
+                                orderServicesSelected.add(orderServices.get(chekedItem));
+                            }
                             refresh();
-
-                            Toast.makeText(getApplicationContext(), " " + chekedItem, Toast.LENGTH_SHORT).show();
                         }
                     });
                     Dialog dialog = adb.create();
@@ -179,8 +197,8 @@ public class ActivityOrderClose extends AppCompatActivity {
         try {
             Map<String, String> authData = AuthHelper.getAuthData(this);
 
-            CSNetUtils<List<CSOrderService>> csNetUtils =
-                new CSNetUtils<List<CSOrderService>>(authData.get("l"), authData.get("p"), this);
+            CSNetUtils<CSParseResult> csNetUtils =
+                new CSNetUtils<CSParseResult>(authData.get("l"), authData.get("p"), this);
 
             csNetUtils.setCsRequest(new CSRequest() {
                 @Override
@@ -190,21 +208,44 @@ public class ActivityOrderClose extends AppCompatActivity {
                 }
             });
 
-            csNetUtils.setCsParser(new CSParser<List<CSOrderService>>() {
+            csNetUtils.setCsParser(new CSParser<CSParseResult>() {
                 @Override
-                public List<CSOrderService> parse(String stringIn) {
+                public CSParseResult parse(String stringIn) {
                     Document doc = Jsoup.parse(stringIn);
                     Element element = doc.getElementsByClass("jobs").first();
                     Elements elements = element.getElementsByTag("option");
-                    List<CSOrderService> result = new LinkedList<>();
+                    List<CSOrderService> resultList = new LinkedList<>();
                     Integer i = 0;
                     for (Element iElement : elements) {
                         String name = iElement.text();
                         Integer value = Integer.parseInt(iElement.attr("value"));
                         Integer price = Integer.parseInt(iElement.attr("price"));
-                        result.add(new CSOrderService(name, value, price));
+                        resultList.add(new CSOrderService(name, value, price));
                     }
-                    return result;
+
+                    Map<String, String> resultMap = new HashMap<String, String>();
+                    Elements scripts = doc.getElementsByTag("script");
+                    for (Element si : elements) {
+                        List<Node> texts = si.childNodes();
+                        if (texts.size() > 0) {
+                            Pattern p = Pattern.compile("AppItem.CheckedActs");
+                            Matcher m = p.matcher(si.childNode(0).toString());
+                            if (m.find()) {
+                                p = Pattern.compile("AppItem.CheckedActs\\(\\'(\\d+)\\',\\'(\\d+)\\',\\'(\\d+)\\'\\);");
+                                m = p.matcher(texts.get(0).toString());
+                                if (m.find()) {
+                                    resultMap.put("id", m.group(1));
+                                    resultMap.put("ida", m.group(2));
+                                    resultMap.put("city", m.group(3));
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    CSParseResult csParseResult = new CSParseResult();
+                    csParseResult.setCsOrderServices(resultList);
+                    csParseResult.setMapStringString(resultMap);
+                    return csParseResult;
                 }
             });
 
@@ -218,7 +259,11 @@ public class ActivityOrderClose extends AppCompatActivity {
             asyncTask = csNetUtils.makeTask();
             asyncTask.execute();
 
-        } catch (Exception e) {
+        } catch (
+            Exception e
+            )
+
+        {
             Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
             Log.d("a", Log.getStackTraceString(e));
         }
