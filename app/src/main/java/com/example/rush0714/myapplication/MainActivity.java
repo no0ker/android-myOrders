@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.rush0714.myapplication.Activities.ActivityOrderClose;
 
+import java.net.CookieManager;
 import java.util.Arrays;
 import java.util.List;
 
@@ -112,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.menu_settings: {
                 Intent intent = new Intent(this, SettingsActivity.class);
+                CookieManager cookieManager = new CookieManager();
+                DataStorage.setCookieStore(cookieManager.getCookieStore());
                 startActivity(intent);
                 return true;
             }

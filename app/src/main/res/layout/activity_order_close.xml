@@ -11,24 +11,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="4"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/AOrderCLoseOrderAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="start"
             android:textColor="@color/black"
             android:textSize="@dimen/abc_text_size_medium_material"/>
 
-        <Button
-            android:id="@+id/button_AOrderClose_add_id"
-            android:layout_width="wrap_content"
+        <ListView
+            android:id="@+id/list_AOrderClose_services"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/button_AOrderClose_add_text"/>
+            android:layout_gravity="center_horizontal"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_AOrderClose_add_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/button_AOrderClose_add_text"/>
+
+            <Button
+                android:id="@+id/button_AOrderClose_send_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ok"/>
+        </LinearLayout>
 
     </LinearLayout>
 

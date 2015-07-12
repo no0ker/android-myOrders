@@ -2,6 +2,7 @@ package com.example.rush0714.myapplication.NetUtils;
 
 import android.os.AsyncTask;
 
+import com.example.rush0714.myapplication.Activities.ActivityOrderClose;
 import com.example.rush0714.myapplication.DataStorage;
 import com.example.rush0714.myapplication.R;
 
@@ -19,14 +20,16 @@ public class CSNetUtils<T> {
     private String password;
     private CSRequest csRequest;
     private CSParser<T> csParser;
+    private CSPostExecute csPostExecute;
+    private ActivityOrderClose activityOrderClose;
 
-    public CSNetUtils(String login, String password) {
+    public CSNetUtils(String login, String password, ActivityOrderClose activityOrderClose) {
         this.login = login;
         this.password = password;
+        this.activityOrderClose = activityOrderClose;
     }
 
     public AsyncTask<Void, Void, T> makeTask() throws Exception {
-        DataSiteHelperV2.authorize(login, password);
         csRequest.setVariables();
 
         AsyncTask<Void, Void, T> asyncTask = new AsyncTask<Void, Void, T>() {
@@ -34,6 +37,8 @@ public class CSNetUtils<T> {
             protected T doInBackground(Void... voids) {
                 String siteString = null;
                 try {
+                    DataSiteHelperV2.authorize(login, password);
+
                     CookieManager cookieManager = new CookieManager(DataStorage.getCookieStore(), CookiePolicy.ACCEPT_ALL);
                     CookieHandler.setDefault(cookieManager);
                     URL url = new URL(csRequest.getAddress());
@@ -81,6 +86,13 @@ public class CSNetUtils<T> {
                 }
                 return csParser.parse(siteString);
             }
+
+            @Override
+            protected void onPostExecute(T t) {
+                if(csPostExecute!=null){
+                    csPostExecute.run(activityOrderClose);
+                }
+            }
         };
         return asyncTask;
     }
@@ -93,5 +105,9 @@ public class CSNetUtils<T> {
 
     public void setCsRequest(CSRequest csRequest) {
         this.csRequest = csRequest;
+    }
+
+    public void setCsPostExecute(CSPostExecute csPostExecute) {
+        this.csPostExecute = csPostExecute;
     }
 }

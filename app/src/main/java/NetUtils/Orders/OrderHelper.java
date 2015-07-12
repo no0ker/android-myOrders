@@ -111,10 +111,10 @@ public class OrderHelper {
         Set<String> rowNumbers = new HashSet<String>();
         for(Comment iComment : comments){
             String rowComment = iComment.getMessage();
-            Pattern pattern = Pattern.compile("(\\D|^)(\\d{11}|\\d{6})(\\D|$)");
+            Pattern pattern = Pattern.compile("\\d{11}|\\d{6}");
             Matcher matcher = pattern.matcher(rowComment + " ");
             while(matcher.find()){
-                rowNumbers.add(matcher.group(2));
+                rowNumbers.add(matcher.group(0));
             }
             Pattern pattern2 = Pattern.compile("(\\+\\d \\(\\d{3}\\) \\d{3}-\\d{4})");
             Matcher matcher2 = pattern2.matcher(rowComment + " ");

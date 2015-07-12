@@ -1,5 +1,6 @@
 package com.example.rush0714.myapplication.Activities;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -14,11 +15,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rush0714.myapplication.Activities.ActivityOrderCloseAdapter.ServicesListViewAdapter;
 import com.example.rush0714.myapplication.DataStorage;
 import com.example.rush0714.myapplication.Helpers.AuthHelper;
 import com.example.rush0714.myapplication.NetUtils.CSNetUtils;
 import com.example.rush0714.myapplication.NetUtils.CSOrderService;
 import com.example.rush0714.myapplication.NetUtils.CSParser;
+import com.example.rush0714.myapplication.NetUtils.CSPostExecute;
 import com.example.rush0714.myapplication.NetUtils.CSRequest;
 import com.example.rush0714.myapplication.R;
 
@@ -27,6 +30,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +41,9 @@ import NetUtils.Orders.Order;
 public class ActivityOrderClose extends AppCompatActivity {
     private Order order;
     private List<CSOrderService> orderServices;
-    private List<CSOrderService> orderServicesSelected;
+    private List<CSOrderService> orderServicesSelected = new ArrayList<CSOrderService>();
     private AsyncTask<Void, Void, List<CSOrderService>> asyncTask;
+    private ServicesListViewAdapter servicesListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,13 +86,34 @@ public class ActivityOrderClose extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             ListView lv = ((AlertDialog) dialogInterface).getListView();
                             Integer chekedItem = lv.getCheckedItemPosition();
-                            
+                            orderServicesSelected.add(orderServices.get(chekedItem));
+
+
+                            ListView orderServicesView = (ListView) findViewById(R.id.list_AOrderClose_services);
+
+                            servicesListViewAdapter = new ServicesListViewAdapter(
+                                getApplicationContext(),
+                                R.layout.list_order_close_services_editable,
+                                orderServicesSelected);
+
+                            orderServicesView.setAdapter(servicesListViewAdapter);
+
                             Toast.makeText(getApplicationContext(), " " + chekedItem, Toast.LENGTH_SHORT).show();
                         }
                     });
                     Dialog dialog = adb.create();
                     dialog.show();
                 }
+            }
+        });
+
+        ((Button) findViewById(R.id.button_AOrderClose_send_id)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String a = "sdf";
+                a = servicesListViewAdapter.getText();
+                Toast.makeText(getApplicationContext(), " " + a, Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -99,7 +125,7 @@ public class ActivityOrderClose extends AppCompatActivity {
             Map<String, String> authData = AuthHelper.getAuthData(this);
 
             CSNetUtils<List<CSOrderService>> csNetUtils =
-                new CSNetUtils<List<CSOrderService>>(authData.get("l"), authData.get("p"));
+                new CSNetUtils<List<CSOrderService>>(authData.get("l"), authData.get("p"), this);
 
             csNetUtils.setCsRequest(new CSRequest() {
                 @Override
@@ -127,6 +153,13 @@ public class ActivityOrderClose extends AppCompatActivity {
                 }
             });
 
+            csNetUtils.setCsPostExecute(new CSPostExecute() {
+                @Override
+                protected void run(Activity activity) {
+                    Toast.makeText(activity.getApplicationContext(),"ecttt!!!!!",Toast.LENGTH_SHORT).show();
+                }
+            });
+
             asyncTask = csNetUtils.makeTask();
             asyncTask.execute();
 
@@ -136,8 +169,5 @@ public class ActivityOrderClose extends AppCompatActivity {
         }
     }
 
-    public void setOrderServices(List<CSOrderService> orderServices) {
-        this.orderServices = orderServices;
-    }
 }
 
