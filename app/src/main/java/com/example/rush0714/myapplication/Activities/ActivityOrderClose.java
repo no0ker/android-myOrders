@@ -88,15 +88,17 @@ public class ActivityOrderClose extends AppCompatActivity {
                             Integer chekedItem = lv.getCheckedItemPosition();
                             orderServicesSelected.add(orderServices.get(chekedItem));
 
+//                            ListView orderServicesView = (ListView) findViewById(R.id.list_AOrderClose_services);
+//
+//                            servicesListViewAdapter = new ServicesListViewAdapter(
+//                                ActivityOrderClose.this,
+//                                R.layout.list_order_close_services_editable,
+//                                orderServicesSelected,
+//                                null);
+//
+//                            orderServicesView.setAdapter(servicesListViewAdapter);
 
-                            ListView orderServicesView = (ListView) findViewById(R.id.list_AOrderClose_services);
-
-                            servicesListViewAdapter = new ServicesListViewAdapter(
-                                getApplicationContext(),
-                                R.layout.list_order_close_services_editable,
-                                orderServicesSelected);
-
-                            orderServicesView.setAdapter(servicesListViewAdapter);
+                            setAdapter();
 
                             Toast.makeText(getApplicationContext(), " " + chekedItem, Toast.LENGTH_SHORT).show();
                         }
@@ -110,10 +112,7 @@ public class ActivityOrderClose extends AppCompatActivity {
         ((Button) findViewById(R.id.button_AOrderClose_send_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String a = "sdf";
-                a = servicesListViewAdapter.getText();
-                Toast.makeText(getApplicationContext(), " " + a, Toast.LENGTH_SHORT).show();
-
+                servicesListViewAdapter.getCsOrderServices().remove(0);
             }
         });
 
@@ -156,7 +155,7 @@ public class ActivityOrderClose extends AppCompatActivity {
             csNetUtils.setCsPostExecute(new CSPostExecute() {
                 @Override
                 protected void run(Activity activity) {
-                    Toast.makeText(activity.getApplicationContext(),"ecttt!!!!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "ecttt!!!!!", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -169,5 +168,48 @@ public class ActivityOrderClose extends AppCompatActivity {
         }
     }
 
+    public void delete(Integer position) {
+        Map<Integer, Integer> counts = servicesListViewAdapter.getCsOrderServicesCounts();
+        if (counts.containsKey(position)) {
+            counts.remove(position);
+        }
+        orderServicesSelected.remove((int) position);
+        setAdapter(counts);
+        refresh();
+    }
+
+    public void setAdapter() {
+        if (servicesListViewAdapter != null) {
+            Map<Integer, Integer> counts = servicesListViewAdapter.getCsOrderServicesCounts();
+            setAdapter(counts);
+        } else {
+            setAdapter(null);
+        }
+    }
+
+    public void setAdapter(Map<Integer, Integer> counts) {
+        ListView orderServicesView = (ListView) findViewById(R.id.list_AOrderClose_services);
+        servicesListViewAdapter = new ServicesListViewAdapter(
+            ActivityOrderClose.this,
+            R.layout.list_order_close_services_editable,
+            orderServicesSelected,
+            counts);
+        orderServicesView.setAdapter(servicesListViewAdapter);
+    }
+
+    public void refresh() {
+        List<CSOrderService> orders = servicesListViewAdapter.getCsOrderServices();
+        Map<Integer, Integer> counts = servicesListViewAdapter.getCsOrderServicesCounts();
+        TextView sumCount = (TextView) findViewById(R.id.AOrderClose_countSum);
+        Integer sum = 0;
+        for (int i = 0; i < orders.size(); i++) {
+            if (counts.containsKey(i)) {
+                sum += orders.get(i).getPrice() * counts.get(i);
+            } else {
+                sum += orders.get(i).getPrice();
+            }
+        }
+        sumCount.setText("" + sum.toString());
+    }
 }
 

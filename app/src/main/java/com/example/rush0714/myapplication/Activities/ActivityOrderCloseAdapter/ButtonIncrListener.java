@@ -1,8 +1,10 @@
 package com.example.rush0714.myapplication.Activities.ActivityOrderCloseAdapter;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.rush0714.myapplication.Activities.ActivityOrderClose;
 import com.example.rush0714.myapplication.R;
 
 import java.util.Map;
@@ -11,12 +13,14 @@ public class ButtonIncrListener implements View.OnClickListener {
     private View parentView;
     private Map<Integer, Integer> csOrderServicesCounts;
     private Integer position;
+    private Activity activity;
     protected Integer count;
 
-    public ButtonIncrListener(View parentView, Map<Integer, Integer> csOrderServicesCounts, Integer position) {
+    public ButtonIncrListener(View parentView, Map<Integer, Integer> csOrderServicesCounts, Integer position, Activity activity) {
         this.parentView = parentView;
         this.csOrderServicesCounts = csOrderServicesCounts;
         this.position = position;
+        this.activity = activity;
     }
 
     @Override
@@ -36,5 +40,6 @@ public class ButtonIncrListener implements View.OnClickListener {
         priceEnd.setText("" + priceEndInt.toString());
 
         csOrderServicesCounts.put(position, count);
+        ((ActivityOrderClose)activity).refresh();
     }
 }
