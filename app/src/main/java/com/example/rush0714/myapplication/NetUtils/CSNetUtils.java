@@ -7,11 +7,13 @@ import com.example.rush0714.myapplication.DataStorage;
 import com.example.rush0714.myapplication.R;
 
 import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 import NetUtils.DataSite.DataSiteHelperV2;
 
@@ -41,11 +43,53 @@ public class CSNetUtils<T> {
 
                     CookieManager cookieManager = new CookieManager(DataStorage.getCookieStore(), CookiePolicy.ACCEPT_ALL);
                     CookieHandler.setDefault(cookieManager);
-                    URL url = new URL(csRequest.getAddress());
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                     if (CSRequest.Method.GET.equals(csRequest.getMethod())) {
+
+                        URL url = new URL(csRequest.getAddress());
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                         connection.setRequestMethod("GET");
+                        if (200 != connection.getResponseCode()) {
+                            throw new Exception(String.valueOf(R.string.error));
+                        }
+                        BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+                        byte[] contents = new byte[512];
+                        int bytesRead = 0;
+                        StringBuilder stringBuilder = new StringBuilder();
+                        while ((bytesRead = in.read(contents)) != -1) {
+                            stringBuilder.append(new String(contents, 0, bytesRead));
+                        }
+                        in.close();
+                        connection.disconnect();
+                        siteString = stringBuilder.toString();
+
+                    } else if (CSRequest.Method.POST.equals(csRequest.getMethod())) {
+
+                        URL url = new URL(csRequest.getAddress());
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("POST");
+                        connection.setRequestProperty("Referer", csRequest.referer);
+
+
+                        if (csRequest.postParams != null && !csRequest.postParams.isEmpty()) {
+                            connection.setDoOutput(true);
+                            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+                            StringBuilder sb = new StringBuilder();
+                            boolean m = false;
+                            for (Map.Entry<String, String> i : csRequest.postParams.entrySet()) {
+                                String ik = i.getKey();
+                                String iv = i.getValue();
+                                if (m) {
+                                    sb.append("&");
+                                }
+                                sb.append(ik + "=" + iv);
+                                m = true;
+                            }
+                            String postParams = sb.toString();
+                            wr.writeBytes(postParams);
+                            wr.flush();
+                            wr.close();
+                        }
                         if (200 != connection.getResponseCode()) {
                             throw new Exception(String.valueOf(R.string.error));
                         }
@@ -61,26 +105,8 @@ public class CSNetUtils<T> {
 
                         DataStorage.setCookieStore(cookieManager.getCookieStore());
                         siteString = stringBuilder.toString();
-//                        OrderHelper.parseOrders(res);
-                    } else if (CSRequest.Method.GET.equals(csRequest.getMethod())) {
-
                     }
-
-
-//                    connection.setDoOutput(true);
-//                    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-//                    wr.writeBytes(
-//                        "tab=now&" +
-//                            "page=1&" +
-//                            "order[]=performed&" +
-//                            "order[]=DESC&" +
-//                            "moptions=false&" +
-//                            "street=&" +
-//                            "texnik=&");
-//                    wr.flush();
-//                    wr.close();
-
-
+                    DataStorage.setCookieStore(cookieManager.getCookieStore());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -89,7 +115,7 @@ public class CSNetUtils<T> {
 
             @Override
             protected void onPostExecute(T t) {
-                if(csPostExecute!=null){
+                if (csPostExecute != null) {
                     csPostExecute.run(activityOrderClose);
                 }
             }

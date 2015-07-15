@@ -43,6 +43,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import NetUtils.Orders.Order;
+import NetUtils.Resources.Resources;
 
 public class ActivityOrderClose extends AppCompatActivity {
     private Order order;
@@ -50,7 +51,10 @@ public class ActivityOrderClose extends AppCompatActivity {
     private List<CSOrderService> orderServicesSelected = new ArrayList<CSOrderService>();
     private Map<Integer, Integer> orderServicesCounts = new ConcurrentHashMap<Integer, Integer>();
     private ServicesListViewAdapter servicesListViewAdapter;
-    private AsyncTask<Void, Void, CSParseResult> asyncTask;
+    private Map<String, String> myActsParams;
+    private List<Integer> myActs;
+    private AsyncTask<Void, Void, CSParseResult> asyncTaskServices;
+    private AsyncTask<Void, Void, List<Integer>> asyncTaskActs;
     private TextView sumCount;
 
 
@@ -131,17 +135,20 @@ public class ActivityOrderClose extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    orderServices = asyncTask.get(1, TimeUnit.SECONDS).getCsOrderServices();
+                    orderServices = asyncTaskServices.get(1, TimeUnit.SECONDS).getCsOrderServices();
+                    myActsParams = asyncTaskServices.get(1, TimeUnit.SECONDS).getMapStringString();
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (orderServices == null || orderServices.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
                 } else {
+                    if(myActs == null || myActs.isEmpty()){
+                        getMyActs();
+                    }
                     AlertDialog.Builder adb = new AlertDialog.Builder(ActivityOrderClose.this);
-                    adb.setTitle(getString(R.string.button_AOrderClose_service_orders));
+                    adb.setTitle(getString(R.string.button_AOrderClose_add_text));
                     List<String> services = new LinkedList<String>();
                     for (CSOrderService i : orderServices) {
                         services.add(i.getName());
@@ -189,7 +196,16 @@ public class ActivityOrderClose extends AppCompatActivity {
         ((Button) findViewById(R.id.button_AOrderClose_send_id)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (myActsParams == null || myActsParams.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), R.string.button_AOrderClose_first_added_services, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    myActs = asyncTaskActs.get(1, TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    Toast.makeText(getApplicationContext(), R.string.orders_is_load, Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
     }
@@ -202,6 +218,41 @@ public class ActivityOrderClose extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getMyActs() {
+        try {
+            Map<String, String> authData = AuthHelper.getAuthData(this);
+            CSNetUtils<List<Integer>> csNetUtils =
+                new CSNetUtils<List<Integer>>(authData.get("l"), authData.get("p"), this);
+
+            csNetUtils.setCsRequest(
+                new CSRequest() {
+                    @Override
+                    public void setVariables() {
+                        method = Method.POST;
+                        address = Resources.URL_ACTS;
+                        postParams = myActsParams;
+                        referer = order.getLink();
+                    }
+                }
+            );
+
+            csNetUtils.setCsParser(new CSParser<List<Integer>>() {
+                @Override
+                public List<Integer> parse(String stringIn) {
+                    if(stringIn != null){
+                        Document doc = Jsoup.parse(stringIn);
+                    }
+                    return null;
+                }
+            });
+            asyncTaskActs = csNetUtils.makeTask();
+            asyncTaskActs.execute();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT);
+            e.printStackTrace();
+        }
     }
 
     private void getOrderServices() {
@@ -236,11 +287,11 @@ public class ActivityOrderClose extends AppCompatActivity {
 
                     Map<String, String> resultMap = new HashMap<String, String>();
                     Elements scripts = doc.getElementsByTag("script");
-                    for (Element si : elements) {
+                    for (Element si : scripts) {
                         List<Node> texts = si.childNodes();
                         if (texts.size() > 0) {
                             Pattern p = Pattern.compile("AppItem.CheckedActs");
-                            Matcher m = p.matcher(si.childNode(0).toString());
+                            Matcher m = p.matcher(texts.get(0).toString());
                             if (m.find()) {
                                 p = Pattern.compile("AppItem.CheckedActs\\(\\'(\\d+)\\',\\'(\\d+)\\',\\'(\\d+)\\'\\);");
                                 m = p.matcher(texts.get(0).toString());
@@ -267,14 +318,10 @@ public class ActivityOrderClose extends AppCompatActivity {
                 }
             });
 
-            asyncTask = csNetUtils.makeTask();
-            asyncTask.execute();
+            asyncTaskServices = csNetUtils.makeTask();
+            asyncTaskServices.execute();
 
-        } catch (
-            Exception e
-            )
-
-        {
+        } catch (Exception e) {
             Toast.makeText(getApplicationContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
             Log.d("a", Log.getStackTraceString(e));
         }

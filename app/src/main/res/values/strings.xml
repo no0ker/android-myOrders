@@ -32,7 +32,9 @@
     <string name="error">ошибка =(</string>
 
     <string name="button_AOrderClose_add_text">Добавить услугу</string>
-    <string name="button_AOrderClose_service_orders">Добавить услугу</string>
+    <string name="button_AOrderClose_add_act">Добавить акт</string>
+
+    <string name="button_AOrderClose_first_added_services">Сначала добавьте услуги!у</string>
 
 
 </resources>
